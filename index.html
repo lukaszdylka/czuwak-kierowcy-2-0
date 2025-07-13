@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Czuwak Kierowcy 2.0</title>
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkN6dXdhayBLaWVyb3djeSAyLjAiLAogICJzaG9ydF9uYW1lIjogIkN6dXdhayIsCiAgImRlc2NyaXB0aW9uIjogIkFwbGlrYWNqYSBkbGEga2llcm93Y8OzdyBqZcW8ZHrEhWN5Y2ggbm9jxIUiLAogICJzdGFydF91cmwiOiAiLyIsCiAgImRpc3BsYXkiOiAiZnVsbHNjcmVlbiIsCiAgInRoZW1lX2NvbG9yIjogIiMxYTFhMWEiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMxYTFhMWEiLAogICJpY29ucyI6IFsKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUI0Yld4dWN6MGlhSFIwY0RvdkwzZDNkeTUzTXk1dmNtY3ZNakF3TUM5emRtY2lJSGRwWkhSb1BTSmhkWFJ2SWlCb1pXbG5hSFE5SW1GMWRHOGlJSFpwWlhkQ2IzZzlJakFnTUNBek1pQXpNaUlnWm1sc2JEMGlJelJpTkdSbVppSTZQSEpsWTNRZ2VEMGlOaUlnZVQwaU5pSWdkMmxrZEdnOUlqSXdJaUJvWldsbmFIUTlJakl3SWlCbWFXeHNQU0lqWXpReVl6UWlMejQ4TDNOMlp6ND0iLAogICAgICAic2l6ZXMiOiAiMzJ4MzIiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfQogIF0KfQ==">
+    <meta name="theme-color" content="#1a1a1a">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 20px;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+            color: #4CAF50;
+        }
+
+        .status-bar {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .speed-display {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .status-text {
+            font-size: 14px;
+            color: #cccccc;
+        }
+
+        .interval-selector {
+            margin-bottom: 20px;
+        }
+
+        .interval-selector label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .interval-selector select {
+            width: 100%;
+            padding: 15px;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            appearance: none;
+        }
+
+        .control-buttons {
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .btn:active {
+            transform: scale(0.95);
+        }
+
+        .btn-start {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-stop {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-pause {
+            background: #ff9800;
+            color: white;
+        }
+
+        .alert-button {
+            background: #ff1744;
+            color: white;
+            font-size: 24px;
+            padding: 40px;
+            border-radius: 20px;
+            animation: pulse 2s infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .countdown {
+            text-align: center;
+            font-size: 48px;
+            font-weight: bold;
+            color: #ff1744;
+            margin-bottom: 20px;
+        }
+
+        .alarm-flash {
+            animation: flash 0.5s infinite;
+        }
+
+        @keyframes flash {
+            0%, 50% { background-color: #ff1744; }
+            51%, 100% { background-color: #1a1a1a; }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .next-alert {
+            text-align: center;
+            font-size: 14px;
+            color: #888;
+            margin-top: 20px;
+        }
+
+        .gps-status {
+            font-size: 12px;
+            color: #888;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .vehicle-status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .vehicle-moving {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .vehicle-stopped {
+            background: #ff9800;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚗 Czuwak Kierowcy 2.0</h1>
+        </div>
+
+        <div class="status-bar">
+            <div class="speed-display">
+                <span id="speed">-- km/h</span>
+                <div class="vehicle-status hidden" id="vehicleStatus">
+                    <span id="vehicleStatusText">Sprawdzanie GPS...</span>
+                </div>
+            </div>
+            <div class="status-text" id="statusText">Nieaktywny</div>
+            <div class="gps-status" id="gpsStatus">GPS: Sprawdzanie...</div>
+        </div>
+
+        <div class="interval-selector">
+            <label for="interval">Interwał przypomnień:</label>
+            <select id="interval">
+                <option value="30">30 sekund</option>
+                <option value="60" selected>1 minuta</option>
+                <option value="120">2 minuty</option>
+                <option value="300">5 minut</option>
+                <option value="600">10 minut</option>
+            </select>
+        </div>
+
+        <div class="control-buttons">
+            <button class="btn btn-start" id="startBtn">🟢 Rozpocznij</button>
+            <button class="btn btn-pause hidden" id="pauseBtn">⏸️ Zatrzymaj</button>
+            <button class="btn btn-stop hidden" id="stopBtn">🛑 Zakończ</button>
+        </div>
+
+        <div class="alert-section hidden" id="alertSection">
+            <div class="countdown" id="countdown">15</div>
+            <button class="btn alert-button" id="alertBtn">
+                🚨 KLIKNIJ - NIE ŚPISZ! 🚨
+            </button>
+        </div>
+
+        <div class="next-alert" id="nextAlert"></div>
+
+        <audio id="alarmSound" loop>
+            <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmYfAjGJ0PLMNC8FMIn" preload="auto"></audio>
+    </div>
+
+    <script>
+        class CzuwakKierowcy {
+            constructor() {
+                this.isActive = false;
+                this.isPaused = false;
+                this.interval = 60;
+                this.alertTimer = null;
+                this.countdownTimer = null;
+                this.nextAlertTimer = null;
+                this.wakeLock = null;
+                this.geolocationWatcher = null;
+                this.currentSpeed = 0;
+                this.isVehicleMoving = false;
+                this.lastPosition = null;
+                
+                this.initElements();
+                this.initEventListeners();
+                this.initGeolocation();
+                this.requestWakeLock();
+                this.createAlarmSound();
+            }
+
+            initElements() {
+                this.intervalSelect = document.getElementById('interval');
+                this.startBtn = document.getElementById('startBtn');
+                this.pauseBtn = document.getElementById('pauseBtn');
+                this.stopBtn = document.getElementById('stopBtn');
+                this.alertSection = document.getElementById('alertSection');
+                this.alertBtn = document.getElementById('alertBtn');
+                this.countdown = document.getElementById('countdown');
+                this.statusText = document.getElementById('statusText');
+                this.speedDisplay = document.getElementById('speed');
+                this.gpsStatus = document.getElementById('gpsStatus');
+                this.vehicleStatus = document.getElementById('vehicleStatus');
+                this.vehicleStatusText = document.getElementById('vehicleStatusText');
+                this.nextAlert = document.getElementById('nextAlert');
+                this.alarmSound = document.getElementById('alarmSound');
+            }
+
+            createAlarmSound() {
+                // Tworzymy syntetyczny dźwięk alarmu za pomocą Web Audio API
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                this.createAlarmBuffer = () => {
+                    const sampleRate = audioContext.sampleRate;
+                    const duration = 1.0;
+                    const buffer = audioContext.createBuffer(1, sampleRate * duration, sampleRate);
+                    const data = buffer.getChannelData(0);
+                    
+                    for (let i = 0; i < data.length; i++) {
+                        const time = i / sampleRate;
+                        const frequency = 800 + 400 * Math.sin(2 * Math.PI * 2 * time);
+                        data[i] = 0.3 * Math.sin(2 * Math.PI * frequency * time);
+                    }
+                    
+                    return buffer;
+                };
+
+                this.alarmBuffer = this.createAlarmBuffer();
+                this.alarmSource = null;
+            }
+
+            playAlarm() {
+                if (this.alarmSource) {
+                    this.alarmSource.stop();
+                }
+                
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                this.alarmSource = audioContext.createBufferSource();
+                this.alarmSource.buffer = this.alarmBuffer;
+                this.alarmSource.loop = true;
+                this.alarmSource.connect(audioContext.destination);
+                this.alarmSource.start();
+                
+                document.body.classList.add('alarm-flash');
+            }
+
+            stopAlarm() {
+                if (this.alarmSource) {
+                    this.alarmSource.stop();
+                    this.alarmSource = null;
+                }
+                document.body.classList.remove('alarm-flash');
+            }
+
+            initEventListeners() {
+                this.startBtn.addEventListener('click', () => this.start());
+                this.pauseBtn.addEventListener('click', () => this.togglePause());
+                this.stopBtn.addEventListener('click', () => this.stop());
+                this.alertBtn.addEventListener('click', () => this.dismissAlert());
+                this.intervalSelect.addEventListener('change', (e) => {
+                    this.interval = parseInt(e.target.value);
+                });
+
+                // Prevent screen lock
+                document.addEventListener('visibilitychange', () => {
+                    if (document.hidden && this.isActive) {
+                        this.requestWakeLock();
+                    }
+                });
+            }
+
+            async requestWakeLock() {
+                try {
+                    if ('wakeLock' in navigator) {
+                        this.wakeLock = await navigator.wakeLock.request('screen');
+                    }
+                } catch (err) {
+                    console.log('Wake Lock API not supported');
+                }
+            }
+
+            initGeolocation() {
+                if ('geolocation' in navigator) {
+                    this.geolocationWatcher = navigator.geolocation.watchPosition(
+                        (position) => this.updateLocation(position),
+                        (error) => this.handleGeolocationError(error),
+                        { enableHighAccuracy: true, timeout: 10000, maximumAge: 5000 }
+                    );
+                } else {
+                    this.gpsStatus.textContent = 'GPS: Niedostępny';
+                }
+            }
+
+            updateLocation(position) {
+                const { latitude, longitude, speed } = position.coords;
+                
+                // Prędkość w m/s, konwertujemy na km/h
+                let speedKmh = 0;
+                if (speed !== null && speed >= 0) {
+                    speedKmh = Math.round(speed * 3.6);
+                } else if (this.lastPosition) {
+                    // Obliczamy prędkość na podstawie zmiany pozycji
+                    const distance = this.calculateDistance(
+                        this.lastPosition.latitude, this.lastPosition.longitude,
+                        latitude, longitude
+                    );
+                    const timeDiff = (position.timestamp - this.lastPosition.timestamp) / 1000;
+                    if (timeDiff > 0) {
+                        speedKmh = Math.round((distance / timeDiff) * 3.6);
+                    }
+                }
+
+                this.currentSpeed = Math.max(0, speedKmh);
+                this.speedDisplay.textContent = `${this.currentSpeed} km/h`;
+                
+                this.isVehicleMoving = this.currentSpeed >= 1;
+                this.updateVehicleStatus();
+                
+                this.lastPosition = {
+                    latitude,
+                    longitude,
+                    timestamp: position.timestamp
+                };
+
+                this.gpsStatus.textContent = 'GPS: Aktywny';
+            }
+
+            calculateDistance(lat1, lon1, lat2, lon2) {
+                const R = 6371000; // Promień Ziemi w metrach
+                const dLat = this.toRadians(lat2 - lat1);
+                const dLon = this.toRadians(lon2 - lon1);
+                const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                        Math.cos(this.toRadians(lat1)) * Math.cos(this.toRadians(lat2)) *
+                        Math.sin(dLon/2) * Math.sin(dLon/2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                return R * c;
+            }
+
+            toRadians(degrees) {
+                return degrees * (Math.PI / 180);
+            }
+
+            updateVehicleStatus() {
+                if (this.isVehicleMoving) {
+                    this.vehicleStatusText.textContent = 'Jadę';
+                    this.vehicleStatus.className = 'vehicle-status vehicle-moving';
+                } else {
+                    this.vehicleStatusText.textContent = 'Stoję';
+                    this.vehicleStatus.className = 'vehicle-status vehicle-stopped';
+                }
+                this.vehicleStatus.classList.remove('hidden');
+            }
+
+            handleGeolocationError(error) {
+                this.gpsStatus.textContent = `GPS: Błąd (${error.message})`;
+            }
+
+            start() {
+                this.isActive = true;
+                this.isPaused = false;
+                this.startBtn.classList.add('hidden');
+                this.pauseBtn.classList.remove('hidden');
+                this.stopBtn.classList.remove('hidden');
+                this.statusText.textContent = 'Aktywny - Monitorowanie';
+                this.scheduleNextAlert();
+            }
+
+            stop() {
+                this.isActive = false;
+                this.isPaused = false;
+                this.clearAllTimers();
+                this.stopAlarm();
+                this.hideAlert();
+                
+                this.startBtn.classList.remove('hidden');
+                this.pauseBtn.classList.add('hidden');
+                this.stopBtn.classList.add('hidden');
+                this.statusText.textContent = 'Nieaktywny';
+                this.nextAlert.textContent = '';
+            }
+
+            togglePause() {
+                if (this.isPaused) {
+                    this.isPaused = false;
+                    this.pauseBtn.textContent = '⏸️ Zatrzymaj';
+                    this.statusText.textContent = 'Aktywny - Monitorowanie';
+                    this.scheduleNextAlert();
+                } else {
+                    this.isPaused = true;
+                    this.pauseBtn.textContent = '▶️ Wznów';
+                    this.statusText.textContent = 'Wstrzymany';
+                    this.clearAllTimers();
+                    this.nextAlert.textContent = '';
+                }
+            }
+
+            scheduleNextAlert() {
+                if (!this.isActive || this.isPaused) return;
+
+                // Sprawdź czy pojazd się porusza
+                if (!this.isVehicleMoving && this.currentSpeed < 1) {
+                    this.statusText.textContent = 'Wstrzymany - Pojazd stoi';
+                    // Sprawdź ponownie za 5 sekund
+                    this.nextAlertTimer = setTimeout(() => this.scheduleNextAlert(), 5000);
+                    return;
+                }
+
+                this.statusText.textContent = 'Aktywny - Monitorowanie';
+                const nextAlertTime = new Date(Date.now() + this.interval * 1000);
+                this.updateNextAlertDisplay(nextAlertTime);
+
+                this.alertTimer = setTimeout(() => {
+                    this.showAlert();
+                }, this.interval * 1000);
+            }
+
+            updateNextAlertDisplay(nextTime) {
+                const updateDisplay = () => {
+                    if (!this.isActive || this.isPaused) {
+                        this.nextAlert.textContent = '';
+                        return;
+                    }
+
+                    const now = new Date();
+                    const diff = Math.max(0, Math.ceil((nextTime - now) / 1000));
+                    
+                    if (diff > 0) {
+                        const minutes = Math.floor(diff / 60);
+                        const seconds = diff % 60;
+                        this.nextAlert.textContent = `Następne przypomnienie za: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                        setTimeout(updateDisplay, 1000);
+                    } else {
+                        this.nextAlert.textContent = '';
+                    }
+                };
+                updateDisplay();
+            }
+
+            showAlert() {
+                this.alertSection.classList.remove('hidden');
+                this.startCountdown();
+            }
+
+            hideAlert() {
+                this.alertSection.classList.add('hidden');
+                this.clearCountdown();
+            }
+
+            startCountdown() {
+                let timeLeft = 15;
+                this.countdown.textContent = timeLeft;
+
+                this.countdownTimer = setInterval(() => {
+                    timeLeft--;
+                    this.countdown.textContent = timeLeft;
+
+                    if (timeLeft <= 0) {
+                        this.triggerAlarm();
+                    }
+                }, 1000);
+            }
+
+            clearCountdown() {
+                if (this.countdownTimer) {
+                    clearInterval(this.countdownTimer);
+                    this.countdownTimer = null;
+                }
+            }
+
+            triggerAlarm() {
+                this.clearCountdown();
+                this.playAlarm();
+                this.statusText.textContent = '🚨 ALARM! Kliknij przycisk!';
+            }
+
+            dismissAlert() {
+                this.hideAlert();
+                this.stopAlarm();
+                this.statusText.textContent = 'Aktywny - Monitorowanie';
+                this.scheduleNextAlert();
+            }
+
+            clearAllTimers() {
+                if (this.alertTimer) {
+                    clearTimeout(this.alertTimer);
+                    this.alertTimer = null;
+                }
+                if (this.nextAlertTimer) {
+                    clearTimeout(this.nextAlertTimer);
+                    this.nextAlertTimer = null;
+                }
+                this.clearCountdown();
+            }
+        }
+
+        // Inicjalizacja aplikacji
+        document.addEventListener('DOMContentLoaded', () => {
+            new CzuwakKierowcy();
+        });
+
+        // Service Worker dla PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('data:application/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgZXZlbnQgPT4gewogIGV2ZW50LndhaXRVbnRpbChzZWxmLnNraXBXYWl0aW5nKCkpOwp9KTsKCnNlbGYuYWRkRXZlbnRMaXN0ZW5lcignZmV0Y2gnLCBldmVudCA9PiB7CiAgZXZlbnQucmVzcG9uZFdpdGgoCiAgICBjYWNoZXMubWF0Y2goZXZlbnQucmVxdWVzdCkudGhlbihyZXNwb25zZSA9PiB7CiAgICAgIHJldHVybiByZXNwb25zZSB8fCBmZXRjaChldmVudC5yZXF1ZXN0KTsKICAgIH0pCiAgKTsKfSk7')
+              .then(() => console.log('Service Worker zarejestrowany'))
+              .catch(err => console.log('Service Worker błąd:', err));
+        }
+    </script>
+</body>
+</html>
