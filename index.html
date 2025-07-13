@@ -87,6 +87,14 @@
             border: 1px solid rgba(76, 175, 80, 0.3);
         }
 
+        .vibration-section {
+            background: rgba(156, 39, 176, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(156, 39, 176, 0.3);
+        }
+
         .checkbox-container {
             display: flex;
             align-items: center;
@@ -293,6 +301,13 @@
             </div>
         </div>
 
+        <div class="vibration-section">
+            <div class="checkbox-container">
+                <input type="checkbox" id="vibrationsEnabled">
+                <label for="vibrationsEnabled">📳 Wibracje podczas alarmu</label>
+            </div>
+        </div>
+
         <div class="control-buttons">
             <button class="btn btn-start" id="startBtn">🟢 Rozpocznij</button>
             <button class="btn btn-pause hidden" id="pauseBtn">⏸️ Zatrzymaj</button>
@@ -330,6 +345,7 @@
                 this.autoStartEnabled = false;
                 this.speedThreshold = 120;
                 this.wasAboveThreshold = false;
+                this.vibrationsEnabled = false;
                 
                 this.initElements();
                 this.initEventListeners();
@@ -355,6 +371,7 @@
                 this.alarmSound = document.getElementById('alarmSound');
                 this.autoStartCheckbox = document.getElementById('autoStartEnabled');
                 this.speedThresholdInput = document.getElementById('speedThreshold');
+                this.vibrationsCheckbox = document.getElementById('vibrationsEnabled');
             }
 
             createAlarmSound() {
@@ -381,6 +398,11 @@
             }
 
             playAlarm() {
+                // Wibracje jeśli włączone
+                if (this.vibrationsEnabled) {
+                    this.triggerVibration();
+                }
+
                 if (this.alarmSource) {
                     this.alarmSource.stop();
                 }
@@ -393,6 +415,24 @@
                 this.alarmSource.start();
                 
                 document.body.classList.add('alarm-flash');
+            }
+
+            triggerVibration() {
+                if ('vibrate' in navigator) {
+                    // Intensywny wzór wibracji dla alarmu: długo-krótko-długo-krótko-bardzo długo
+                    navigator.vibrate([800, 200, 800, 200, 1500]);
+                    console.log('Wibracje uruchomione');
+                } else {
+                    console.log('Wibracje nie są obsługiwane w tej przeglądarce');
+                }
+            }
+
+            testVibration() {
+                if ('vibrate' in navigator) {
+                    // Krótki test wibracji przy włączeniu opcji
+                    navigator.vibrate([200, 100, 200]);
+                    console.log('Test wibracji');
+                }
             }
 
             stopAlarm() {
@@ -423,6 +463,14 @@
 
                 this.speedThresholdInput.addEventListener('change', (e) => {
                     this.speedThreshold = parseInt(e.target.value);
+                });
+
+                this.vibrationsCheckbox.addEventListener('change', (e) => {
+                    this.vibrationsEnabled = e.target.checked;
+                    if (this.vibrationsEnabled) {
+                        // Test wibracji przy włączeniu
+                        this.testVibration();
+                    }
                 });
 
                 // Prevent screen lock
