@@ -253,10 +253,17 @@
             animation: flashlight 0.5s infinite;
         }
 
-        @keyframes flashlight {
-            0%, 50% { filter: brightness(200%); }
-            51%, 100% { filter: brightness(100%); }
+        .reaction-time {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-left: 5px;
         }
+
+        .reaction-good { background: #4CAF50; color: white; }
+        .reaction-warning { background: #ff9800; color: white; }
+        .reaction-danger { background: #f44336; color: white; }
 
         .checkbox-container {
             display: flex;
@@ -641,6 +648,12 @@
                 this.initGeolocation();
                 this.requestWakeLock();
                 this.createAlarmSound();
+                
+                // Sprawdź czy to tryb współkierowcy
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.has('copilot')) {
+                    this.initCopilotInterface(urlParams.get('copilot'));
+                }
             }
 
             initElements() {
@@ -891,12 +904,6 @@
                         this.requestWakeLock();
                     }
                 });
-
-                // Sprawdź czy to tryb współkierowcy
-                const urlParams = new URLSearchParams(window.location.search);
-                if (urlParams.has('copilot')) {
-                    this.initCopilotInterface(urlParams.get('copilot'));
-                }
             }
 
             async requestWakeLock() {
@@ -1118,32 +1125,98 @@
             generateQRCode() {
                 const copilotUrl = `${window.location.origin}${window.location.pathname}?copilot=${this.sessionId}`;
                 
-                // Prosta implementacja QR kodu (fallback do URL-a)
+                // Prosta implementacja QR kodu z tekstem
                 const canvas = this.qrCanvas;
                 const ctx = canvas.getContext('2d');
-                canvas.width = 200;
+                canvas.width = 300;
                 canvas.height = 200;
                 
                 // Wypełnij białym tłem
                 ctx.fillStyle = 'white';
-                ctx.fillRect(0, 0, 200, 200);
+                ctx.fillRect(0, 0, 300, 200);
                 
-                // Dodaj tekst z URL-em
+                // Ramka
+                ctx.strokeStyle = 'black';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(5, 5, 290, 190);
+                
+                // Dodaj tekst z instrukcją
                 ctx.fillStyle = 'black';
-                ctx.font = '12px Arial';
+                ctx.font = 'bold 14px Arial';
                 ctx.textAlign = 'center';
-                ctx.fillText('Otwórz link w drugiej', 100, 50);
-                ctx.fillText('aplikacji:', 100, 70);
-                ctx.font = '10px Arial';
+                ctx.fillText('OTWÓRZ LINK W DRUGIEJ APLIKACJI:', 150, 30);
+                
+                ctx.font = '12px Arial';
+                ctx.fillText('Skopiuj i wklej poniższy link', 150, 50);
+                ctx.fillText('w przeglądarce drugiego telefonu:', 150, 70);
                 
                 // Podziel URL na linie
-                const urlParts = copilotUrl.match(/.{1,25}/g) || [copilotUrl];
-                urlParts.forEach((part, index) => {
-                    ctx.fillText(part, 100, 100 + (index * 15));
-                });
+                ctx.font = 'bold 10px Arial';
+                const maxWidth = 280;
+                const words = copilotUrl.split('/');
+                let line = '';
+                let y = 100;
+                
+                for (let i = 0; i < words.length; i++) {
+                    const testLine = line + words[i] + '/';
+                    const metrics = ctx.measureText(testLine);
+                    
+                    if (metrics.width > maxWidth && i > 0) {
+                        ctx.fillText(line, 150, y);
+                        line = words[i] + '/';
+                        y += 15;
+                    } else {
+                        line = testLine;
+                    }
+                }
+                ctx.fillText(line, 150, y);
+                
+                // Dodaj instrukcje
+                ctx.font = '11px Arial';
+                ctx.fillText('LUB skopiuj Session ID: ' + this.sessionId, 150, y + 25);
             }
 
-            startWebSocketServer() {
+            async requestPermissions() {
+                const permissions = [];
+                
+                // Lokalizacja
+                if ('geolocation' in navigator) {
+                    permissions.push('📍 Lokalizacja (GPS)');
+                }
+                
+                // Mikrofon dla komend głosowych
+                if (this.voiceCommands) {
+                    try {
+                        await navigator.mediaDevices.getUserMedia({ audio: true });
+                        permissions.push('🎤 Mikrofon (komendy głosowe)');
+                    } catch (error) {
+                        console.log('Brak dostępu do mikrofonu');
+                    }
+                }
+                
+                // Kamera dla latarki
+                if (this.flashlightEnabled) {
+                    try {
+                        await navigator.mediaDevices.getUserMedia({ video: true });
+                        permissions.push('📸 Kamera (latarka)');
+                    } catch (error) {
+                        console.log('Brak dostępu do kamery');
+                    }
+                }
+                
+                // Powiadomienia
+                if ('Notification' in window && Notification.permission === 'default') {
+                    const permission = await Notification.requestPermission();
+                    if (permission === 'granted') {
+                        permissions.push('🔔 Powiadomienia');
+                    }
+                }
+                
+                if (permissions.length > 0) {
+                    console.log('Uzyskano uprawnienia:', permissions.join(', '));
+                    this.statusText.textContent = `Uprawnienia OK: ${permissions.length} aktywnych`;
+                }
+            }
                 // Symulacja WebSocket przez localStorage (dla demo)
                 // W prawdziwej implementacji używałbyś WebRTC lub zewnętrznego serwera
                 this.websocket = {
@@ -1181,25 +1254,33 @@
             }
 
             connectToCopilot() {
-                // Wyślij sygnał połączenia
-                localStorage.setItem(`copilot_${this.sessionId}_response`, JSON.stringify({
-                    type: 'connected',
-                    timestamp: Date.now()
-                }));
+                try {
+                    // Wyślij sygnał połączenia
+                    localStorage.setItem(`copilot_${this.sessionId}_response`, JSON.stringify({
+                        type: 'connected',
+                        timestamp: Date.now()
+                    }));
 
-                // Nasłuchuj alertów
-                this.copilotListenInterval = setInterval(() => {
-                    const alertData = localStorage.getItem(`copilot_${this.sessionId}`);
-                    if (alertData) {
-                        const data = JSON.parse(alertData);
-                        if (data.type === 'alert' && Date.now() - data.timestamp < 5000) {
-                            this.showCopilotAlert();
+                    // Nasłuchuj alertów
+                    this.copilotListenInterval = setInterval(() => {
+                        try {
+                            const alertData = localStorage.getItem(`copilot_${this.sessionId}`);
+                            if (alertData) {
+                                const data = JSON.parse(alertData);
+                                if (data.type === 'alert' && Date.now() - data.timestamp < 5000) {
+                                    this.showCopilotAlert();
+                                }
+                            }
+                        } catch (error) {
+                            console.log('Błąd nasłuchiwania alertów:', error);
                         }
-                    }
-                }, 500);
+                    }, 500);
 
-                document.getElementById('copilotConnectionStatus').className = 'connection-status status-connected';
-                document.getElementById('copilotConnectionStatus').textContent = '🟢 Połączony z kierowcą';
+                    document.getElementById('copilotConnectionStatus').className = 'connection-status status-connected';
+                    document.getElementById('copilotConnectionStatus').textContent = '🟢 Połączony z kierowcą';
+                } catch (error) {
+                    console.log('Błąd łączenia ze współkierowcą:', error);
+                }
             }
 
             showCopilotAlert() {
@@ -1270,6 +1351,9 @@
             }
 
             start() {
+                // Sprawdź uprawnienia przed startem
+                this.requestPermissions();
+                
                 this.isActive = true;
                 this.isPaused = false;
                 this.wasAboveThreshold = false; // Reset auto-start
@@ -1286,6 +1370,11 @@
                 
                 this.updateIntervalForMode();
                 this.scheduleNextAlert();
+                
+                // Inicjuj funkcje jeśli są włączone
+                if (this.voiceCommands) {
+                    this.initVoiceRecognition();
+                }
             }
 
             stop() {
@@ -1297,6 +1386,7 @@
                 this.stopAlarm();
                 this.hideAlert();
                 this.hideFatigueWarning();
+                this.stopVoiceRecognition();
                 
                 this.startBtn.classList.remove('hidden');
                 this.pauseBtn.classList.add('hidden');
@@ -1309,6 +1399,14 @@
                     this.statusText.textContent = 'Nieaktywny';
                 }
                 this.nextAlert.textContent = '';
+                
+                // Wyczyść interwały współkierowcy
+                if (this.copilotCheckInterval) {
+                    clearInterval(this.copilotCheckInterval);
+                }
+                if (this.copilotListenInterval) {
+                    clearInterval(this.copilotListenInterval);
+                }
             }
 
             togglePause() {
@@ -1338,12 +1436,14 @@
                 }
 
                 this.statusText.textContent = 'Aktywny - Monitorowanie';
-                const nextAlertTime = new Date(Date.now() + (this.currentInterval || this.interval) * 1000);
+                this.updateIntervalForMode(); // Upewnij się że interwał jest aktualny
+                const intervalToUse = this.currentInterval || this.interval;
+                const nextAlertTime = new Date(Date.now() + intervalToUse * 1000);
                 this.updateNextAlertDisplay(nextAlertTime);
 
                 this.alertTimer = setTimeout(() => {
                     this.showAlert();
-                }, (this.currentInterval || this.interval) * 1000);
+                }, intervalToUse * 1000);
             }
 
             updateNextAlertDisplay(nextTime) {
