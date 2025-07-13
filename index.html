@@ -323,8 +323,10 @@
 
         <div class="next-alert" id="nextAlert"></div>
 
-        <audio id="alarmSound" loop>
-            <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmYfAjGJ0PLMNC8FMIn" preload="auto">
+        <audio id="alarmSound" loop preload="auto">
+            <source src="alarm.mp3" type="audio/mpeg">
+            <source src="alarm.wav" type="audio/wav">
+            <source src="alarm.ogg" type="audio/ogg">
         </audio>
     </div>
 
@@ -375,26 +377,51 @@
             }
 
             createAlarmSound() {
-                // Tworzymy syntetyczny dźwięk alarmu za pomocą Web Audio API
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                // Próbujemy użyć zewnętrznego pliku audio NAJPIERW
+                this.useExternalAudio = false;
                 
-                this.createAlarmBuffer = () => {
-                    const sampleRate = audioContext.sampleRate;
-                    const duration = 1.0;
-                    const buffer = audioContext.createBuffer(1, sampleRate * duration, sampleRate);
-                    const data = buffer.getChannelData(0);
-                    
-                    for (let i = 0; i < data.length; i++) {
-                        const time = i / sampleRate;
-                        const frequency = 800 + 400 * Math.sin(2 * Math.PI * 2 * time);
-                        data[i] = 0.3 * Math.sin(2 * Math.PI * frequency * time);
-                    }
-                    
-                    return buffer;
-                };
+                this.alarmSound.addEventListener('loadeddata', () => {
+                    console.log('✅ Własny plik alarm.mp3 załadowany pomyślnie!');
+                    this.useExternalAudio = true;
+                });
 
-                this.alarmBuffer = this.createAlarmBuffer();
-                this.alarmSource = null;
+                this.alarmSound.addEventListener('error', () => {
+                    console.log('❌ Nie można załadować alarm.mp3, używam syntetycznego dźwięku');
+                    this.useExternalAudio = false;
+                });
+
+                // Załaduj plik
+                this.alarmSound.load();
+                
+                // Przygotuj zapasowy syntetyczny dźwięk
+                this.createSyntheticAlarm();
+            }
+
+            createSyntheticAlarm() {
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    
+                    this.createAlarmBuffer = () => {
+                        const sampleRate = audioContext.sampleRate;
+                        const duration = 1.0;
+                        const buffer = audioContext.createBuffer(1, sampleRate * duration, sampleRate);
+                        const data = buffer.getChannelData(0);
+                        
+                        for (let i = 0; i < data.length; i++) {
+                            const time = i / sampleRate;
+                            const frequency = 800 + 400 * Math.sin(2 * Math.PI * 2 * time);
+                            data[i] = 0.3 * Math.sin(2 * Math.PI * frequency * time);
+                        }
+                        
+                        return buffer;
+                    };
+
+                    this.alarmBuffer = this.createAlarmBuffer();
+                    this.alarmSource = null;
+                    console.log('🔄 Syntetyczny dźwięk przygotowany jako backup');
+                } catch (error) {
+                    console.log('⚠️ Web Audio API nie jest dostępne');
+                }
             }
 
             playAlarm() {
@@ -403,18 +430,50 @@
                     this.triggerVibration();
                 }
 
-                if (this.alarmSource) {
-                    this.alarmSource.stop();
+                // NAJPIERW próbuj odtworzyć TWÓJ plik alarm.mp3
+                if (this.useExternalAudio && this.alarmSound) {
+                    try {
+                        this.alarmSound.currentTime = 0;
+                        this.alarmSound.volume = 1.0;
+                        const playPromise = this.alarmSound.play();
+                        
+                        if (playPromise !== undefined) {
+                            playPromise.then(() => {
+                                console.log('🎵 Odtwarzam Twój plik alarm.mp3');
+                            }).catch(error => {
+                                console.log('❌ Błąd odtwarzania alarm.mp3, przełączam na syntetyczny');
+                                this.playSyntheticAlarm();
+                            });
+                        }
+                    } catch (error) {
+                        console.log('❌ Błąd odtwarzania alarm.mp3, przełączam na syntetyczny');
+                        this.playSyntheticAlarm();
+                    }
+                } else {
+                    // Użyj syntetycznego dźwięku jako backup
+                    console.log('🔄 Używam syntetycznego dźwięku (backup)');
+                    this.playSyntheticAlarm();
                 }
                 
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                this.alarmSource = audioContext.createBufferSource();
-                this.alarmSource.buffer = this.alarmBuffer;
-                this.alarmSource.loop = true;
-                this.alarmSource.connect(audioContext.destination);
-                this.alarmSource.start();
-                
                 document.body.classList.add('alarm-flash');
+            }
+
+            playSyntheticAlarm() {
+                try {
+                    if (this.alarmSource) {
+                        this.alarmSource.stop();
+                    }
+                    
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    this.alarmSource = audioContext.createBufferSource();
+                    this.alarmSource.buffer = this.alarmBuffer;
+                    this.alarmSource.loop = true;
+                    this.alarmSource.connect(audioContext.destination);
+                    this.alarmSource.start();
+                    console.log('🔊 Odtwarzam syntetyczny alarm');
+                } catch (error) {
+                    console.log('❌ Nie można odtworzyć żadnego dźwięku');
+                }
             }
 
             triggerVibration() {
@@ -436,10 +495,22 @@
             }
 
             stopAlarm() {
+                // Zatrzymaj TWÓJ plik audio
+                if (this.alarmSound) {
+                    this.alarmSound.pause();
+                    this.alarmSound.currentTime = 0;
+                }
+                
+                // Zatrzymaj syntetyczny dźwięk
                 if (this.alarmSource) {
-                    this.alarmSource.stop();
+                    try {
+                        this.alarmSource.stop();
+                    } catch (error) {
+                        // Źródło już zatrzymane
+                    }
                     this.alarmSource = null;
                 }
+                
                 document.body.classList.remove('alarm-flash');
             }
 
