@@ -79,6 +79,56 @@
             appearance: none;
         }
 
+        .auto-start-section {
+            background: rgba(76, 175, 80, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-container input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox-container label {
+            font-size: 14px;
+            cursor: pointer;
+            margin: 0;
+        }
+
+        .speed-threshold {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .speed-threshold input[type="number"] {
+            width: 80px;
+            padding: 8px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            text-align: center;
+            margin: 0 10px;
+        }
+
+        .speed-threshold span {
+            font-size: 14px;
+            color: #cccccc;
+        }
+
         .control-buttons {
             margin-bottom: 30px;
         }
@@ -118,17 +168,29 @@
         .alert-button {
             background: #ff1744;
             color: white;
-            font-size: 24px;
+            font-size: 28px;
+            font-weight: bold;
             padding: 40px;
             border-radius: 20px;
             animation: pulse 2s infinite;
             margin-bottom: 20px;
+            box-shadow: 0 0 30px rgba(255, 23, 68, 0.5);
+            border: 3px solid #ff5574;
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+            0% { 
+                transform: scale(1); 
+                box-shadow: 0 0 30px rgba(255, 23, 68, 0.5);
+            }
+            50% { 
+                transform: scale(1.05); 
+                box-shadow: 0 0 50px rgba(255, 23, 68, 0.8);
+            }
+            100% { 
+                transform: scale(1); 
+                box-shadow: 0 0 30px rgba(255, 23, 68, 0.5);
+            }
         }
 
         .countdown {
@@ -140,12 +202,18 @@
         }
 
         .alarm-flash {
-            animation: flash 0.5s infinite;
+            animation: flash 0.3s infinite;
         }
 
         @keyframes flash {
-            0%, 50% { background-color: #ff1744; }
-            51%, 100% { background-color: #1a1a1a; }
+            0%, 40% { 
+                background: linear-gradient(135deg, #ff1744, #ff5574);
+                color: #ffffff;
+            }
+            41%, 100% { 
+                background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+                color: #ffffff;
+            }
         }
 
         .hidden {
@@ -213,6 +281,18 @@
             </select>
         </div>
 
+        <div class="auto-start-section">
+            <div class="checkbox-container">
+                <input type="checkbox" id="autoStartEnabled">
+                <label for="autoStartEnabled">🏎️ Auto-start przy spadku prędkości</label>
+            </div>
+            <div class="speed-threshold">
+                <span>Uruchom gdy prędkość spadnie poniżej:</span>
+                <input type="number" id="speedThreshold" value="120" min="50" max="200" step="10">
+                <span>km/h</span>
+            </div>
+        </div>
+
         <div class="control-buttons">
             <button class="btn btn-start" id="startBtn">🟢 Rozpocznij</button>
             <button class="btn btn-pause hidden" id="pauseBtn">⏸️ Zatrzymaj</button>
@@ -222,7 +302,7 @@
         <div class="alert-section hidden" id="alertSection">
             <div class="countdown" id="countdown">15</div>
             <button class="btn alert-button" id="alertBtn">
-                🚨 KLIKNIJ - NIE ŚPISZ! 🚨
+                🚨 CZUWAM! 🚨
             </button>
         </div>
 
@@ -246,6 +326,9 @@
                 this.currentSpeed = 0;
                 this.isVehicleMoving = false;
                 this.lastPosition = null;
+                this.autoStartEnabled = false;
+                this.speedThreshold = 120;
+                this.wasAboveThreshold = false;
                 
                 this.initElements();
                 this.initEventListeners();
@@ -269,51 +352,121 @@
                 this.vehicleStatusText = document.getElementById('vehicleStatusText');
                 this.nextAlert = document.getElementById('nextAlert');
                 this.alarmSound = document.getElementById('alarmSound');
+                this.autoStartCheckbox = document.getElementById('autoStartEnabled');
+                this.speedThresholdInput = document.getElementById('speedThreshold');
             }
 
             createAlarmSound() {
-                // Tworzymy syntetyczny dźwięk alarmu za pomocą Web Audio API
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                
-                this.createAlarmBuffer = () => {
-                    const sampleRate = audioContext.sampleRate;
-                    const duration = 1.0;
-                    const buffer = audioContext.createBuffer(1, sampleRate * duration, sampleRate);
-                    const data = buffer.getChannelData(0);
-                    
-                    for (let i = 0; i < data.length; i++) {
-                        const time = i / sampleRate;
-                        const frequency = 800 + 400 * Math.sin(2 * Math.PI * 2 * time);
-                        data[i] = 0.3 * Math.sin(2 * Math.PI * frequency * time);
-                    }
-                    
-                    return buffer;
-                };
+                // Próbujemy użyć zewnętrznego pliku audio
+                this.alarmSound.addEventListener('loadeddata', () => {
+                    console.log('Zewnętrzny plik alarm.mp3 załadowany pomyślnie');
+                    this.useExternalAudio = true;
+                });
 
-                this.alarmBuffer = this.createAlarmBuffer();
-                this.alarmSource = null;
+                this.alarmSound.addEventListener('error', () => {
+                    console.log('Nie można załadować alarm.mp3, używam syntetycznego dźwięku');
+                    this.useExternalAudio = false;
+                    this.createSyntheticAlarm();
+                });
+
+                // Sprawdź czy plik jest dostępny
+                this.alarmSound.load();
+                this.useExternalAudio = false; // Domyślnie false, zostanie zmienione jeśli plik się załaduje
+                
+                // Przygotuj zapasowy syntetyczny dźwięk
+                this.createSyntheticAlarm();
+            }
+
+            createSyntheticAlarm() {
+                // Tworzymy syntetyczny dźwięk alarmu za pomocą Web Audio API
+                try {
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    
+                    this.createAlarmBuffer = () => {
+                        const sampleRate = audioContext.sampleRate;
+                        const duration = 1.0;
+                        const buffer = audioContext.createBuffer(1, sampleRate * duration, sampleRate);
+                        const data = buffer.getChannelData(0);
+                        
+                        for (let i = 0; i < data.length; i++) {
+                            const time = i / sampleRate;
+                            const frequency = 800 + 400 * Math.sin(2 * Math.PI * 2 * time);
+                            data[i] = 0.3 * Math.sin(2 * Math.PI * frequency * time);
+                        }
+                        
+                        return buffer;
+                    };
+
+                    this.alarmBuffer = this.createAlarmBuffer();
+                    this.alarmSource = null;
+                } catch (error) {
+                    console.log('Web Audio API nie jest dostępne');
+                }
             }
 
             playAlarm() {
-                if (this.alarmSource) {
-                    this.alarmSource.stop();
+                // Najpierw spróbuj odtworzyć zewnętrzny plik audio
+                if (this.useExternalAudio && this.alarmSound) {
+                    try {
+                        this.alarmSound.currentTime = 0;
+                        this.alarmSound.volume = 1.0;
+                        const playPromise = this.alarmSound.play();
+                        
+                        if (playPromise !== undefined) {
+                            playPromise.then(() => {
+                                console.log('Odtwarzanie zewnętrznego pliku alarm.mp3');
+                            }).catch(error => {
+                                console.log('Błąd odtwarzania zewnętrznego pliku, przełączam na syntetyczny');
+                                this.playSyntheticAlarm();
+                            });
+                        }
+                    } catch (error) {
+                        console.log('Błąd odtwarzania zewnętrznego pliku, przełączam na syntetyczny');
+                        this.playSyntheticAlarm();
+                    }
+                } else {
+                    // Użyj syntetycznego dźwięku jako backup
+                    this.playSyntheticAlarm();
                 }
-                
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                this.alarmSource = audioContext.createBufferSource();
-                this.alarmSource.buffer = this.alarmBuffer;
-                this.alarmSource.loop = true;
-                this.alarmSource.connect(audioContext.destination);
-                this.alarmSource.start();
                 
                 document.body.classList.add('alarm-flash');
             }
 
+            playSyntheticAlarm() {
+                try {
+                    if (this.alarmSource) {
+                        this.alarmSource.stop();
+                    }
+                    
+                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    this.alarmSource = audioContext.createBufferSource();
+                    this.alarmSource.buffer = this.alarmBuffer;
+                    this.alarmSource.loop = true;
+                    this.alarmSource.connect(audioContext.destination);
+                    this.alarmSource.start();
+                    console.log('Odtwarzanie syntetycznego alarmu');
+                } catch (error) {
+                    console.log('Nie można odtworzyć żadnego dźwięku');
+                }
+            }
+
             stopAlarm() {
+                // Zatrzymaj zewnętrzny plik audio
+                if (this.alarmSound) {
+                    this.alarmSound.pause();
+                    this.alarmSound.currentTime = 0;
+                }
+                
+                // Zatrzymaj syntetyczny dźwięk
                 if (this.alarmSource) {
-                    this.alarmSource.stop();
+                    try {
+                        this.alarmSource.stop();
+                    } catch (error) {
+                        // Źródło już zatrzymane
+                    }
                     this.alarmSource = null;
                 }
+                
                 document.body.classList.remove('alarm-flash');
             }
 
@@ -324,6 +477,19 @@
                 this.alertBtn.addEventListener('click', () => this.dismissAlert());
                 this.intervalSelect.addEventListener('change', (e) => {
                     this.interval = parseInt(e.target.value);
+                });
+
+                this.autoStartCheckbox.addEventListener('change', (e) => {
+                    this.autoStartEnabled = e.target.checked;
+                    if (this.autoStartEnabled) {
+                        this.statusText.textContent = 'Gotowy do auto-startu';
+                    } else if (!this.isActive) {
+                        this.statusText.textContent = 'Nieaktywny';
+                    }
+                });
+
+                this.speedThresholdInput.addEventListener('change', (e) => {
+                    this.speedThreshold = parseInt(e.target.value);
                 });
 
                 // Prevent screen lock
@@ -381,6 +547,9 @@
                 this.isVehicleMoving = this.currentSpeed >= 1;
                 this.updateVehicleStatus();
                 
+                // Sprawdź auto-start
+                this.checkAutoStart();
+                
                 this.lastPosition = {
                     latitude,
                     longitude,
@@ -416,6 +585,27 @@
                 this.vehicleStatus.classList.remove('hidden');
             }
 
+            checkAutoStart() {
+                if (!this.autoStartEnabled || this.isActive) {
+                    return;
+                }
+
+                // Sprawdź czy prędkość była wcześniej powyżej progu
+                if (this.currentSpeed >= this.speedThreshold) {
+                    this.wasAboveThreshold = true;
+                    this.statusText.textContent = `Gotowy - Prędkość: ${this.currentSpeed} km/h`;
+                    return;
+                }
+
+                // Jeśli prędkość spadła poniżej progu i wcześniej była powyżej
+                if (this.wasAboveThreshold && this.currentSpeed < this.speedThreshold && this.currentSpeed > 10) {
+                    this.statusText.textContent = `🚀 AUTO-START! Prędkość spadła do ${this.currentSpeed} km/h`;
+                    setTimeout(() => {
+                        this.start();
+                    }, 2000); // 2 sekundy opóźnienia na przygotowanie
+                }
+            }
+
             handleGeolocationError(error) {
                 this.gpsStatus.textContent = `GPS: Błąd (${error.message})`;
             }
@@ -423,6 +613,7 @@
             start() {
                 this.isActive = true;
                 this.isPaused = false;
+                this.wasAboveThreshold = false; // Reset auto-start
                 this.startBtn.classList.add('hidden');
                 this.pauseBtn.classList.remove('hidden');
                 this.stopBtn.classList.remove('hidden');
@@ -433,6 +624,7 @@
             stop() {
                 this.isActive = false;
                 this.isPaused = false;
+                this.wasAboveThreshold = false; // Reset auto-start
                 this.clearAllTimers();
                 this.stopAlarm();
                 this.hideAlert();
@@ -440,7 +632,12 @@
                 this.startBtn.classList.remove('hidden');
                 this.pauseBtn.classList.add('hidden');
                 this.stopBtn.classList.add('hidden');
-                this.statusText.textContent = 'Nieaktywny';
+                
+                if (this.autoStartEnabled) {
+                    this.statusText.textContent = 'Gotowy do auto-startu';
+                } else {
+                    this.statusText.textContent = 'Nieaktywny';
+                }
                 this.nextAlert.textContent = '';
             }
 
