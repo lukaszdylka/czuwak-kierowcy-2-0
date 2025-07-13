@@ -273,6 +273,30 @@
             color: white;
         }
 
+        .gps-request {
+            background: rgba(33, 150, 243, 0.1);
+            border: 1px solid #2196F3;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .gps-request.hidden {
+            display: none;
+        }
+
+        .btn-gps {
+            background: #2196F3;
+            color: white;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
         .vehicle-stopped {
             background: #ff9800;
             color: white;
@@ -294,6 +318,20 @@
             </div>
             <div class="status-text" id="statusText">Nieaktywny</div>
             <div class="gps-status" id="gpsStatus">GPS: Sprawdzanie...</div>
+        </div>
+
+        <div class="gps-request" id="gpsRequest">
+            <h3>📍 Wymagane uprawnienia GPS</h3>
+            <p>Czuwak potrzebuje dostępu do lokalizacji aby:</p>
+            <ul style="text-align: left; margin: 10px 0;">
+                <li>📊 Wyświetlać aktualną prędkość</li>
+                <li>⏸️ Pauzować gdy stoisz</li>
+                <li>🏎️ Auto-start przy spadku prędkości</li>
+            </ul>
+            <button class="btn-gps" id="requestGpsBtn">🗺️ Włącz GPS</button>
+            <p style="font-size: 12px; margin-top: 10px; color: #888;">
+                Aplikacja działa bez GPS, ale funkcje będą ograniczone
+            </p>
         </div>
 
         <div class="interval-selector">
@@ -389,10 +427,10 @@
                 this.requestWakeLock();
                 this.createAlarmSound();
                 
-                // Inicjalizuj GPS z opóźnieniem (daj czas na załadowanie strony)
+                // Inicjalizuj GPS z opóźnieniem
                 setTimeout(() => {
                     this.initGeolocation();
-                }, 1000);
+                }, 500);
             }
 
             initElements() {
@@ -417,6 +455,10 @@
                 this.vibrationsCheckbox = document.getElementById('vibrationsEnabled');
                 this.flashlightCheckbox = document.getElementById('flashlightEnabled');
                 this.alwaysAudioCheckbox = document.getElementById('alwaysAudio');
+                
+                // GPS request
+                this.gpsRequest = document.getElementById('gpsRequest');
+                this.requestGpsBtn = document.getElementById('requestGpsBtn');
             }
 
             createAlarmSound() {
@@ -529,471 +571,4 @@
                     // Wzór wibracji: [vibrate, pause, vibrate, pause, ...]
                     navigator.vibrate([500, 200, 500, 200, 1000]);
                 }
-            }
-
-            async initFlashlight() {
-                if (this.flashlightEnabled) {
-                    try {
-                        const stream = await navigator.mediaDevices.getUserMedia({
-                            video: { facingMode: 'environment' }
-                        });
-                        
-                        const track = stream.getVideoTracks()[0];
-                        if ('torch' in track.getCapabilities()) {
-                            this.flashlightStream = { stream, track };
-                            this.toggleFlashlight(true);
-                        } else {
-                            // Fallback: migający ekran
-                            document.body.classList.add('flashlight-active');
-                        }
-                    } catch (error) {
-                        console.log('Nie można uzyskać dostępu do latarki, używam migającego ekranu');
-                        // Fallback: migający ekran
-                        document.body.classList.add('flashlight-active');
-                    }
-                }
-            }
-
-            toggleFlashlight(enabled) {
-                if (this.flashlightStream && this.flashlightStream.track) {
-                    this.flashlightStream.track.applyConstraints({
-                        advanced: [{ torch: enabled }]
-                    }).catch(() => {
-                        // Fallback jeśli torch nie działa
-                        if (enabled) {
-                            document.body.classList.add('flashlight-active');
-                        } else {
-                            document.body.classList.remove('flashlight-active');
-                        }
-                    });
-                } else if (enabled) {
-                    document.body.classList.add('flashlight-active');
-                } else {
-                    document.body.classList.remove('flashlight-active');
-                }
-            }
-
-            stopFlashlight() {
-                this.toggleFlashlight(false);
-                document.body.classList.remove('flashlight-active');
-                
-                if (this.flashlightStream) {
-                    this.flashlightStream.stream.getTracks().forEach(track => track.stop());
-                    this.flashlightStream = null;
-                }
-            }
-
-            stopAlarm() {
-                // Zatrzymaj zewnętrzny plik audio
-                if (this.alarmSound) {
-                    this.alarmSound.pause();
-                    this.alarmSound.currentTime = 0;
-                }
-                
-                // Zatrzymaj syntetyczny dźwięk
-                if (this.alarmSource) {
-                    try {
-                        this.alarmSource.stop();
-                    } catch (error) {
-                        // Źródło już zatrzymane
-                    }
-                    this.alarmSource = null;
-                }
-
-                // Zatrzymaj latarkę
-                this.stopFlashlight();
-                
-                document.body.classList.remove('alarm-flash');
-            }
-
-            initEventListeners() {
-                this.startBtn.addEventListener('click', () => this.start());
-                this.pauseBtn.addEventListener('click', () => this.togglePause());
-                this.stopBtn.addEventListener('click', () => this.stop());
-                this.alertBtn.addEventListener('click', () => this.dismissAlert());
-                this.intervalSelect.addEventListener('change', (e) => {
-                    this.interval = parseInt(e.target.value);
-                });
-
-                this.autoStartCheckbox.addEventListener('change', (e) => {
-                    this.autoStartEnabled = e.target.checked;
-                    if (this.autoStartEnabled) {
-                        this.statusText.textContent = 'Gotowy do auto-startu';
-                    } else if (!this.isActive) {
-                        this.statusText.textContent = 'Nieaktywny';
-                    }
-                });
-
-                this.speedThresholdInput.addEventListener('change', (e) => {
-                    this.speedThreshold = parseInt(e.target.value);
-                });
-
-                // Opcje alertów
-                this.vibrationsCheckbox.addEventListener('change', (e) => {
-                    this.vibrationsEnabled = e.target.checked;
-                });
-
-                this.flashlightCheckbox.addEventListener('change', (e) => {
-                    this.flashlightEnabled = e.target.checked;
-                });
-
-                this.alwaysAudioCheckbox.addEventListener('change', (e) => {
-                    this.alwaysAudio = e.target.checked;
-                });
-
-                // Prevent screen lock
-                document.addEventListener('visibilitychange', () => {
-                    if (document.hidden && this.isActive) {
-                        this.requestWakeLock();
-                    }
-                });
-            }
-
-            async requestWakeLock() {
-                try {
-                    if ('wakeLock' in navigator) {
-                        this.wakeLock = await navigator.wakeLock.request('screen');
-                    }
-                } catch (err) {
-                    console.log('Wake Lock API not supported');
-                }
-            }
-
-            async initGeolocation() {
-                this.gpsStatus.textContent = 'GPS: Sprawdzanie uprawnień...';
-                
-                if (!('geolocation' in navigator)) {
-                    this.gpsStatus.textContent = 'GPS: Niedostępny w tej przeglądarce';
-                    return;
-                }
-
-                try {
-                    // Najpierw sprawdź uprawnienia
-                    if ('permissions' in navigator) {
-                        const permission = await navigator.permissions.query({name: 'geolocation'});
-                        console.log('Status uprawnień GPS:', permission.state);
-                    }
-
-                    // Uzyskaj pojedynczą pozycję najpierw (test)
-                    this.gpsStatus.textContent = 'GPS: Próba uzyskania lokalizacji...';
-                    
-                    navigator.geolocation.getCurrentPosition(
-                        (position) => {
-                            console.log('GPS test successful:', position);
-                            this.gpsStatus.textContent = 'GPS: Połączony, uruchamianie śledzenia...';
-                            this.startGPSWatching();
-                        },
-                        (error) => {
-                            console.log('GPS error:', error);
-                            this.handleGeolocationError(error);
-                        },
-                        { 
-                            enableHighAccuracy: true, 
-                            timeout: 15000, 
-                            maximumAge: 0 
-                        }
-                    );
-
-                } catch (error) {
-                    console.log('GPS initialization error:', error);
-                    this.gpsStatus.textContent = 'GPS: Błąd inicjalizacji';
-                }
-            }
-
-            startGPSWatching() {
-                this.geolocationWatcher = navigator.geolocation.watchPosition(
-                    (position) => this.updateLocation(position),
-                    (error) => this.handleGeolocationError(error),
-                    { 
-                        enableHighAccuracy: true, 
-                        timeout: 10000, 
-                        maximumAge: 5000 
-                    }
-                );
-                console.log('GPS watching started');
-            }
-
-            updateLocation(position) {
-                console.log('GPS Update:', position);
-                const { latitude, longitude, speed } = position.coords;
-                
-                // Prędkość w m/s, konwertujemy na km/h
-                let speedKmh = 0;
-                if (speed !== null && speed >= 0) {
-                    speedKmh = Math.round(speed * 3.6);
-                    console.log('GPS Speed from device:', speedKmh, 'km/h');
-                } else if (this.lastPosition) {
-                    // Obliczamy prędkość na podstawie zmiany pozycji
-                    const distance = this.calculateDistance(
-                        this.lastPosition.latitude, this.lastPosition.longitude,
-                        latitude, longitude
-                    );
-                    const timeDiff = (position.timestamp - this.lastPosition.timestamp) / 1000;
-                    if (timeDiff > 0) {
-                        speedKmh = Math.round((distance / timeDiff) * 3.6);
-                        console.log('Calculated speed:', speedKmh, 'km/h', 'Distance:', distance, 'Time:', timeDiff);
-                    }
-                }
-
-                this.currentSpeed = Math.max(0, speedKmh);
-                this.speedDisplay.textContent = `${this.currentSpeed} km/h`;
-                
-                this.isVehicleMoving = this.currentSpeed >= 1;
-                this.updateVehicleStatus();
-                
-                // Sprawdź auto-start
-                this.checkAutoStart();
-                
-                this.lastPosition = {
-                    latitude,
-                    longitude,
-                    timestamp: position.timestamp
-                };
-
-                this.gpsStatus.textContent = `GPS: Aktywny (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`;
-            }
-
-            calculateDistance(lat1, lon1, lat2, lon2) {
-                const R = 6371000; // Promień Ziemi w metrach
-                const dLat = this.toRadians(lat2 - lat1);
-                const dLon = this.toRadians(lon2 - lon1);
-                const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                        Math.cos(this.toRadians(lat1)) * Math.cos(this.toRadians(lat2)) *
-                        Math.sin(dLon/2) * Math.sin(dLon/2);
-                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-                return R * c;
-            }
-
-            toRadians(degrees) {
-                return degrees * (Math.PI / 180);
-            }
-
-            updateVehicleStatus() {
-                if (this.isVehicleMoving) {
-                    this.vehicleStatusText.textContent = 'Jadę';
-                    this.vehicleStatus.className = 'vehicle-status vehicle-moving';
-                } else {
-                    this.vehicleStatusText.textContent = 'Stoję';
-                    this.vehicleStatus.className = 'vehicle-status vehicle-stopped';
-                }
-                this.vehicleStatus.classList.remove('hidden');
-            }
-
-            handleGeolocationError(error) {
-                console.log('GPS Error details:', error);
-                let errorMessage = 'GPS: ';
-                
-                switch(error.code) {
-                    case error.PERMISSION_DENIED:
-                        errorMessage += 'Brak uprawnień - włącz lokalizację w przeglądarce';
-                        // Pokaż instrukcje
-                        setTimeout(() => {
-                            alert('🗺️ WŁĄCZ GPS:\n\n1. Kliknij ikonkę kłódki/lokalizacji w pasku adresu\n2. Wybierz "Zezwól" na lokalizację\n3. Odśwież stronę (F5)');
-                        }, 1000);
-                        break;
-                    case error.POSITION_UNAVAILABLE:
-                        errorMessage += 'Pozycja niedostępna - sprawdź połączenie GPS';
-                        break;
-                    case error.TIMEOUT:
-                        errorMessage += 'Timeout - próbuję ponownie za 5s';
-                        // Spróbuj ponownie za 5 sekund
-                        setTimeout(() => {
-                            this.initGeolocation();
-                        }, 5000);
-                        break;
-                    default:
-                        errorMessage += `Błąd ${error.code}: ${error.message}`;
-                        break;
-                }
-                
-                this.gpsStatus.textContent = errorMessage;
-            }
-
-            checkAutoStart() {
-                if (!this.autoStartEnabled || this.isActive) {
-                    return;
-                }
-
-                // Sprawdź czy prędkość była wcześniej powyżej progu
-                if (this.currentSpeed >= this.speedThreshold) {
-                    this.wasAboveThreshold = true;
-                    this.statusText.textContent = `Gotowy - Prędkość: ${this.currentSpeed} km/h`;
-                    return;
-                }
-
-                // Jeśli prędkość spadła poniżej progu i wcześniej była powyżej
-                if (this.wasAboveThreshold && this.currentSpeed < this.speedThreshold && this.currentSpeed > 10) {
-                    this.statusText.textContent = `🚀 AUTO-START! Prędkość spadła do ${this.currentSpeed} km/h`;
-                    setTimeout(() => {
-                        this.start();
-                    }, 2000); // 2 sekundy opóźnienia na przygotowanie
-                }
-            }
-
-            start() {
-                this.isActive = true;
-                this.isPaused = false;
-                this.wasAboveThreshold = false; // Reset auto-start
-                this.startBtn.classList.add('hidden');
-                this.pauseBtn.classList.remove('hidden');
-                this.stopBtn.classList.remove('hidden');
-                this.statusText.textContent = 'Aktywny - Monitorowanie';
-                this.scheduleNextAlert();
-            }
-
-            stop() {
-                this.isActive = false;
-                this.isPaused = false;
-                this.wasAboveThreshold = false; // Reset auto-start
-                this.clearAllTimers();
-                this.stopAlarm();
-                this.hideAlert();
-                
-            stop() {
-                this.isActive = false;
-                this.isPaused = false;
-                this.wasAboveThreshold = false; // Reset auto-start
-                this.clearAllTimers();
-                this.stopAlarm();
-                this.hideAlert();
-                
-                this.startBtn.classList.remove('hidden');
-                this.pauseBtn.classList.add('hidden');
-                this.stopBtn.classList.add('hidden');
-                
-                if (this.autoStartEnabled) {
-                    this.statusText.textContent = 'Gotowy do auto-startu';
-                } else {
-                    this.statusText.textContent = 'Nieaktywny';
-                }
-                this.nextAlert.textContent = '';
-            }
-
-            togglePause() {
-                if (this.isPaused) {
-                    this.isPaused = false;
-                    this.pauseBtn.textContent = '⏸️ Zatrzymaj';
-                    this.statusText.textContent = 'Aktywny - Monitorowanie';
-                    this.scheduleNextAlert();
-                } else {
-                    this.isPaused = true;
-                    this.pauseBtn.textContent = '▶️ Wznów';
-                    this.statusText.textContent = 'Wstrzymany';
-                    this.clearAllTimers();
-                    this.nextAlert.textContent = '';
-                }
-            }
-
-            scheduleNextAlert() {
-                if (!this.isActive || this.isPaused) return;
-
-                // Sprawdź czy pojazd się porusza
-                if (!this.isVehicleMoving && this.currentSpeed < 1) {
-                    this.statusText.textContent = 'Wstrzymany - Pojazd stoi';
-                    // Sprawdź ponownie za 5 sekund
-                    this.nextAlertTimer = setTimeout(() => this.scheduleNextAlert(), 5000);
-                    return;
-                }
-
-                this.statusText.textContent = 'Aktywny - Monitorowanie';
-                const nextAlertTime = new Date(Date.now() + this.interval * 1000);
-                this.updateNextAlertDisplay(nextAlertTime);
-
-                this.alertTimer = setTimeout(() => {
-                    this.showAlert();
-                }, this.interval * 1000);
-            }
-
-            updateNextAlertDisplay(nextTime) {
-                const updateDisplay = () => {
-                    if (!this.isActive || this.isPaused) {
-                        this.nextAlert.textContent = '';
-                        return;
-                    }
-
-                    const now = new Date();
-                    const diff = Math.max(0, Math.ceil((nextTime - now) / 1000));
-                    
-                    if (diff > 0) {
-                        const minutes = Math.floor(diff / 60);
-                        const seconds = diff % 60;
-                        this.nextAlert.textContent = `Następne przypomnienie za: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-                        setTimeout(updateDisplay, 1000);
-                    } else {
-                        this.nextAlert.textContent = '';
-                    }
-                };
-                updateDisplay();
-            }
-
-            showAlert() {
-                this.alertSection.classList.remove('hidden');
-                this.startCountdown();
-            }
-
-            hideAlert() {
-                this.alertSection.classList.add('hidden');
-                this.clearCountdown();
-            }
-
-            startCountdown() {
-                let timeLeft = 15;
-                this.countdown.textContent = timeLeft;
-
-                this.countdownTimer = setInterval(() => {
-                    timeLeft--;
-                    this.countdown.textContent = timeLeft;
-
-                    if (timeLeft <= 0) {
-                        this.triggerAlarm();
-                    }
-                }, 1000);
-            }
-
-            clearCountdown() {
-                if (this.countdownTimer) {
-                    clearInterval(this.countdownTimer);
-                    this.countdownTimer = null;
-                }
-            }
-
-            triggerAlarm() {
-                this.clearCountdown();
-                this.playAlarm();
-                this.statusText.textContent = '🚨 ALARM! Kliknij przycisk!';
-            }
-
-            dismissAlert() {
-                this.hideAlert();
-                this.stopAlarm();
-                this.statusText.textContent = 'Aktywny - Monitorowanie';
-                this.scheduleNextAlert();
-            }
-
-            clearAllTimers() {
-                if (this.alertTimer) {
-                    clearTimeout(this.alertTimer);
-                    this.alertTimer = null;
-                }
-                if (this.nextAlertTimer) {
-                    clearTimeout(this.nextAlertTimer);
-                    this.nextAlertTimer = null;
-                }
-                this.clearCountdown();
-            }
-        }
-
-        // Inicjalizacja aplikacji
-        document.addEventListener('DOMContentLoaded', () => {
-            new CzuwakKierowcy();
-        });
-
-        // Service Worker dla PWA
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('data:application/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgZXZlbnQgPT4gewogIGV2ZW50LndhaXRVbnRpbChzZWxmLnNraXBXYWl0aW5nKCkpOwp9KTsKCnNlbGYuYWRkRXZlbnRMaXN0ZW5lcignZmV0Y2gnLCBldmVudCA9PiB7CiAgZXZlbnQucmVzcG9uZFdpdGgoCiAgICBjYWNoZXMubWF0Y2goZXZlbnQucmVxdWVzdCkudGhlbihyZXNwb25zZSA9PiB7CiAgICAgIHJldHVybiByZXNwb25zZSB8fCBmZXRjaChldmVudC5yZXF1ZXN0KTsKICAgIH0pCiAgKTsKfSk7')
-              .then(() => console.log('Service Worker zarejestrowany'))
-              .catch(err => console.log('Service Worker błąd:', err));
-        }
-    </script>
-</body>
-</html>
+    
