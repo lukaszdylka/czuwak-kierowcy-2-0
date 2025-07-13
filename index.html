@@ -386,9 +386,13 @@
                 
                 this.initElements();
                 this.initEventListeners();
-                this.initGeolocation();
                 this.requestWakeLock();
                 this.createAlarmSound();
+                
+                // Inicjalizuj GPS z opóźnieniem (daj czas na załadowanie strony)
+                setTimeout(() => {
+                    this.initGeolocation();
+                }, 1000);
             }
 
             initElements() {
@@ -655,25 +659,69 @@
                 }
             }
 
-            initGeolocation() {
-                if ('geolocation' in navigator) {
-                    this.geolocationWatcher = navigator.geolocation.watchPosition(
-                        (position) => this.updateLocation(position),
-                        (error) => this.handleGeolocationError(error),
-                        { enableHighAccuracy: true, timeout: 10000, maximumAge: 5000 }
+            async initGeolocation() {
+                this.gpsStatus.textContent = 'GPS: Sprawdzanie uprawnień...';
+                
+                if (!('geolocation' in navigator)) {
+                    this.gpsStatus.textContent = 'GPS: Niedostępny w tej przeglądarce';
+                    return;
+                }
+
+                try {
+                    // Najpierw sprawdź uprawnienia
+                    if ('permissions' in navigator) {
+                        const permission = await navigator.permissions.query({name: 'geolocation'});
+                        console.log('Status uprawnień GPS:', permission.state);
+                    }
+
+                    // Uzyskaj pojedynczą pozycję najpierw (test)
+                    this.gpsStatus.textContent = 'GPS: Próba uzyskania lokalizacji...';
+                    
+                    navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                            console.log('GPS test successful:', position);
+                            this.gpsStatus.textContent = 'GPS: Połączony, uruchamianie śledzenia...';
+                            this.startGPSWatching();
+                        },
+                        (error) => {
+                            console.log('GPS error:', error);
+                            this.handleGeolocationError(error);
+                        },
+                        { 
+                            enableHighAccuracy: true, 
+                            timeout: 15000, 
+                            maximumAge: 0 
+                        }
                     );
-                } else {
-                    this.gpsStatus.textContent = 'GPS: Niedostępny';
+
+                } catch (error) {
+                    console.log('GPS initialization error:', error);
+                    this.gpsStatus.textContent = 'GPS: Błąd inicjalizacji';
                 }
             }
 
+            startGPSWatching() {
+                this.geolocationWatcher = navigator.geolocation.watchPosition(
+                    (position) => this.updateLocation(position),
+                    (error) => this.handleGeolocationError(error),
+                    { 
+                        enableHighAccuracy: true, 
+                        timeout: 10000, 
+                        maximumAge: 5000 
+                    }
+                );
+                console.log('GPS watching started');
+            }
+
             updateLocation(position) {
+                console.log('GPS Update:', position);
                 const { latitude, longitude, speed } = position.coords;
                 
                 // Prędkość w m/s, konwertujemy na km/h
                 let speedKmh = 0;
                 if (speed !== null && speed >= 0) {
                     speedKmh = Math.round(speed * 3.6);
+                    console.log('GPS Speed from device:', speedKmh, 'km/h');
                 } else if (this.lastPosition) {
                     // Obliczamy prędkość na podstawie zmiany pozycji
                     const distance = this.calculateDistance(
@@ -683,6 +731,7 @@
                     const timeDiff = (position.timestamp - this.lastPosition.timestamp) / 1000;
                     if (timeDiff > 0) {
                         speedKmh = Math.round((distance / timeDiff) * 3.6);
+                        console.log('Calculated speed:', speedKmh, 'km/h', 'Distance:', distance, 'Time:', timeDiff);
                     }
                 }
 
@@ -701,7 +750,7 @@
                     timestamp: position.timestamp
                 };
 
-                this.gpsStatus.textContent = 'GPS: Aktywny';
+                this.gpsStatus.textContent = `GPS: Aktywny (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`;
             }
 
             calculateDistance(lat1, lon1, lat2, lon2) {
@@ -731,7 +780,33 @@
             }
 
             handleGeolocationError(error) {
-                this.gpsStatus.textContent = `GPS: Błąd (${error.message})`;
+                console.log('GPS Error details:', error);
+                let errorMessage = 'GPS: ';
+                
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        errorMessage += 'Brak uprawnień - włącz lokalizację w przeglądarce';
+                        // Pokaż instrukcje
+                        setTimeout(() => {
+                            alert('🗺️ WŁĄCZ GPS:\n\n1. Kliknij ikonkę kłódki/lokalizacji w pasku adresu\n2. Wybierz "Zezwól" na lokalizację\n3. Odśwież stronę (F5)');
+                        }, 1000);
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        errorMessage += 'Pozycja niedostępna - sprawdź połączenie GPS';
+                        break;
+                    case error.TIMEOUT:
+                        errorMessage += 'Timeout - próbuję ponownie za 5s';
+                        // Spróbuj ponownie za 5 sekund
+                        setTimeout(() => {
+                            this.initGeolocation();
+                        }, 5000);
+                        break;
+                    default:
+                        errorMessage += `Błąd ${error.code}: ${error.message}`;
+                        break;
+                }
+                
+                this.gpsStatus.textContent = errorMessage;
             }
 
             checkAutoStart() {
