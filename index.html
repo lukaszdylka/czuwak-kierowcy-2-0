@@ -481,13 +481,13 @@
 
         .nav-tab {
             flex: 1;
-            padding: 15px 10px;
+            padding: 15px 8px;
             text-align: center;
             background: transparent;
             border: none;
             color: #cccccc;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
             transition: all 0.3s ease;
         }
@@ -624,6 +624,7 @@
         <div class="nav-tabs">
             <button class="nav-tab active" id="mainTab">Główne</button>
             <button class="nav-tab" id="statsTab">Statystyki</button>
+            <button class="nav-tab" id="gpsTab">GPS Analytics</button>
         </div>
 
         <!-- Main Tab Content -->
@@ -753,6 +754,79 @@
         </div>
         <!-- End Statistics Tab Content -->
 
+        <!-- GPS Analytics Tab Content -->
+        <div class="tab-content" id="gpsContent">
+            
+            <div class="session-stats">
+                <div class="session-title">Bieżąca sesja GPS</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="currentSpeed">0</div>
+                        <div class="stat-label">Aktualna prędkość</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="maxSpeed">0</div>
+                        <div class="stat-label">Max prędkość</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="avgSpeed">0</div>
+                        <div class="stat-label">Średnia prędkość</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="distance">0.0</div>
+                        <div class="stat-label">Dystans (km)</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="total-stats">
+                <div class="total-title">Analiza jazdy</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="roadType">-</div>
+                        <div class="stat-label">Typ drogi</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="drivingStyle">-</div>
+                        <div class="stat-label">Styl jazdy</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="timeMoving">0:00</div>
+                        <div class="stat-label">Czas w ruchu</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="timeStopped">0:00</div>
+                        <div class="stat-label">Czas postojów</div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <strong>Rekomendacja:</strong> <span id="recommendation">Rozpocznij sesję aby zobaczyć analizę</span>
+                </div>
+            </div>
+
+            <div class="session-stats">
+                <div class="session-title">Historia lokalizacji</div>
+                <div style="background: rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 15px; margin-bottom: 15px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <span><strong>Aktualna pozycja:</strong></span>
+                        <button class="btn" style="padding: 5px 10px; font-size: 12px;" id="refreshLocation">Odśwież</button>
+                    </div>
+                    <div id="currentLocation" style="font-size: 14px; color: #cccccc;">Brak danych GPS</div>
+                </div>
+                
+                <div style="background: rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 15px;">
+                    <div style="margin-bottom: 10px;"><strong>Ostatnie punkty trasy:</strong></div>
+                    <div id="routePoints" style="font-size: 12px; color: #888; max-height: 150px; overflow-y: auto;">
+                        Brak zapisanych punktów trasy
+                    </div>
+                </div>
+            </div>
+
+            <button class="clear-stats" id="clearGpsBtn">Wyczyść dane GPS</button>
+            
+        </div>
+        <!-- End GPS Analytics Tab Content -->
+
         <audio id="alarmSound" loop preload="auto">
             <source src="alarm.mp3" type="audio/mpeg">
             <source src="alarm.wav" type="audio/wav">
@@ -791,6 +865,19 @@
                 this.reactionTimes = [];
                 this.currentStreak = 0;
                 this.statsUpdateInterval = null;
+                
+                // GPS Analytics
+                this.gpsData = {
+                    maxSpeed: 0,
+                    totalDistance: 0,
+                    speedHistory: [],
+                    timeMoving: 0,
+                    timeStopped: 0,
+                    lastMoveTime: null,
+                    lastStopTime: null,
+                    routePoints: [],
+                    startLocation: null
+                };
                 
                 this.initElements();
                 this.initEventListeners();
@@ -840,6 +927,23 @@
                 this.lastSessionDate = document.getElementById('lastSessionDate');
                 this.clearStatsBtn = document.getElementById('clearStatsBtn');
                 this.vibrationStatus = document.getElementById('vibrationStatus');
+                
+                // GPS Analytics elements
+                this.gpsTab = document.getElementById('gpsTab');
+                this.gpsContent = document.getElementById('gpsContent');
+                this.currentSpeedDisplay = document.getElementById('currentSpeed');
+                this.maxSpeedDisplay = document.getElementById('maxSpeed');
+                this.avgSpeedDisplay = document.getElementById('avgSpeed');
+                this.distanceDisplay = document.getElementById('distance');
+                this.roadTypeDisplay = document.getElementById('roadType');
+                this.drivingStyleDisplay = document.getElementById('drivingStyle');
+                this.timeMovingDisplay = document.getElementById('timeMoving');
+                this.timeStoppedDisplay = document.getElementById('timeStopped');
+                this.recommendationDisplay = document.getElementById('recommendation');
+                this.currentLocationDisplay = document.getElementById('currentLocation');
+                this.routePointsDisplay = document.getElementById('routePoints');
+                this.refreshLocationBtn = document.getElementById('refreshLocation');
+                this.clearGpsBtn = document.getElementById('clearGpsBtn');
             }
 
             createAlarmSound() {
@@ -1084,9 +1188,14 @@
                 // Navigation tabs
                 this.mainTab.addEventListener('click', () => this.switchTab('main'));
                 this.statsTab.addEventListener('click', () => this.switchTab('stats'));
+                this.gpsTab.addEventListener('click', () => this.switchTab('gps'));
                 
                 // Statistics
                 this.clearStatsBtn.addEventListener('click', () => this.clearAllStats());
+                
+                // GPS Analytics
+                this.refreshLocationBtn.addEventListener('click', () => this.updateLocationDisplay());
+                this.clearGpsBtn.addEventListener('click', () => this.clearGpsData());
                 
                 this.intervalSelect.addEventListener('change', (e) => {
                     this.interval = parseInt(e.target.value);
@@ -1164,6 +1273,9 @@
 
                 this.currentSpeed = Math.max(0, speedKmh);
                 this.speedDisplay.textContent = `${this.currentSpeed} km/h`;
+                
+                // Update GPS analytics
+                this.updateGpsAnalytics(latitude, longitude, speedKmh);
                 
                 this.isVehicleMoving = this.currentSpeed >= 1;
                 this.updateVehicleStatus();
@@ -1244,6 +1356,16 @@
                 this.reactionTimes = [];
                 this.currentStreak = 0;
                 this.alertStartTime = null;
+                
+                // Reset GPS analytics for session
+                this.gpsData.maxSpeed = 0;
+                this.gpsData.totalDistance = 0;
+                this.gpsData.speedHistory = [];
+                this.gpsData.timeMoving = 0;
+                this.gpsData.timeStopped = 0;
+                this.gpsData.lastMoveTime = Date.now();
+                this.gpsData.lastStopTime = null;
+                this.gpsData.startLocation = this.lastPosition;
                 
                 this.startBtn.classList.add('hidden');
                 this.pauseBtn.classList.remove('hidden');
@@ -1482,17 +1604,26 @@
             // === STATISTICS FUNCTIONS ===
             
             switchTab(tab) {
+                // Remove active from all tabs
+                this.mainTab.classList.remove('active');
+                this.statsTab.classList.remove('active');
+                this.gpsTab.classList.remove('active');
+                this.mainContent.classList.remove('active');
+                this.statsContent.classList.remove('active');
+                this.gpsContent.classList.remove('active');
+                
+                // Add active to selected tab
                 if (tab === 'main') {
                     this.mainTab.classList.add('active');
-                    this.statsTab.classList.remove('active');
                     this.mainContent.classList.add('active');
-                    this.statsContent.classList.remove('active');
                 } else if (tab === 'stats') {
-                    this.mainTab.classList.remove('active');
                     this.statsTab.classList.add('active');
-                    this.mainContent.classList.remove('active');
                     this.statsContent.classList.add('active');
                     this.updateAllStats(); // Refresh stats when viewing
+                } else if (tab === 'gps') {
+                    this.gpsTab.classList.add('active');
+                    this.gpsContent.classList.add('active');
+                    this.updateGpsDisplay(); // Refresh GPS data when viewing
                 }
             }
 
@@ -1627,6 +1758,247 @@
                     } catch (error) {
                         alert('Błąd podczas czyszczenia statystyk');
                     }
+                }
+            }
+
+            // === GPS ANALYTICS FUNCTIONS ===
+            
+            updateGpsAnalytics(lat, lon, speed) {
+                if (!this.isActive) return;
+
+                // Update max speed
+                if (speed > this.gpsData.maxSpeed) {
+                    this.gpsData.maxSpeed = speed;
+                }
+
+                // Add to speed history (keep last 100 points)
+                this.gpsData.speedHistory.push(speed);
+                if (this.gpsData.speedHistory.length > 100) {
+                    this.gpsData.speedHistory.shift();
+                }
+
+                // Calculate distance if we have previous position
+                if (this.lastPosition && this.gpsData.startLocation) {
+                    const distance = this.calculateDistance(
+                        this.lastPosition.latitude, this.lastPosition.longitude,
+                        lat, lon
+                    );
+                    this.gpsData.totalDistance += distance / 1000; // Convert to km
+                }
+
+                // Update moving/stopped time
+                const now = Date.now();
+                if (speed >= 1) { // Moving
+                    if (this.gpsData.lastStopTime) {
+                        this.gpsData.timeStopped += (now - this.gpsData.lastStopTime);
+                        this.gpsData.lastStopTime = null;
+                    }
+                    this.gpsData.lastMoveTime = now;
+                } else { // Stopped
+                    if (this.gpsData.lastMoveTime && !this.gpsData.lastStopTime) {
+                        this.gpsData.timeMoving += (now - this.gpsData.lastMoveTime);
+                        this.gpsData.lastStopTime = now;
+                    }
+                }
+
+                // Add route point (every 30 seconds or significant distance change)
+                const lastPoint = this.gpsData.routePoints[this.gpsData.routePoints.length - 1];
+                const shouldAddPoint = !lastPoint || 
+                    (now - lastPoint.timestamp > 30000) ||
+                    (this.calculateDistance(lastPoint.lat, lastPoint.lon, lat, lon) > 100);
+
+                if (shouldAddPoint) {
+                    this.gpsData.routePoints.push({
+                        lat: lat,
+                        lon: lon,
+                        speed: speed,
+                        timestamp: now
+                    });
+                    
+                    // Keep only last 50 points
+                    if (this.gpsData.routePoints.length > 50) {
+                        this.gpsData.routePoints.shift();
+                    }
+                }
+            }
+
+            updateGpsDisplay() {
+                // Current speed
+                this.currentSpeedDisplay.textContent = `${this.currentSpeed} km/h`;
+                
+                // Max speed
+                this.maxSpeedDisplay.textContent = `${this.gpsData.maxSpeed} km/h`;
+                
+                // Average speed
+                const avgSpeed = this.gpsData.speedHistory.length > 0 ?
+                    Math.round(this.gpsData.speedHistory.reduce((a, b) => a + b, 0) / this.gpsData.speedHistory.length) : 0;
+                this.avgSpeedDisplay.textContent = `${avgSpeed} km/h`;
+                
+                // Distance
+                this.distanceDisplay.textContent = this.gpsData.totalDistance.toFixed(1);
+                
+                // Road type analysis
+                const roadType = this.analyzeRoadType();
+                this.roadTypeDisplay.textContent = roadType;
+                
+                // Driving style
+                const drivingStyle = this.analyzeDrivingStyle();
+                this.drivingStyleDisplay.textContent = drivingStyle;
+                
+                // Time calculations
+                const now = Date.now();
+                let totalMovingTime = this.gpsData.timeMoving;
+                let totalStoppedTime = this.gpsData.timeStopped;
+                
+                if (this.isActive && this.sessionStartTime) {
+                    if (this.currentSpeed >= 1 && this.gpsData.lastMoveTime) {
+                        totalMovingTime += (now - this.gpsData.lastMoveTime);
+                    } else if (this.currentSpeed < 1 && this.gpsData.lastStopTime) {
+                        totalStoppedTime += (now - this.gpsData.lastStopTime);
+                    }
+                }
+                
+                this.timeMovingDisplay.textContent = this.formatTime(totalMovingTime);
+                this.timeStoppedDisplay.textContent = this.formatTime(totalStoppedTime);
+                
+                // Recommendation
+                this.updateRecommendation(roadType, drivingStyle, avgSpeed);
+                
+                // Update location display
+                this.updateLocationDisplay();
+                
+                // Update route points
+                this.updateRoutePointsDisplay();
+            }
+
+            analyzeRoadType() {
+                if (this.gpsData.speedHistory.length < 5) return "-";
+                
+                const avgSpeed = this.gpsData.speedHistory.reduce((a, b) => a + b, 0) / this.gpsData.speedHistory.length;
+                const maxSpeed = Math.max(...this.gpsData.speedHistory);
+                
+                if (maxSpeed > 100 && avgSpeed > 80) return "Autostrada";
+                else if (maxSpeed > 80 && avgSpeed > 50) return "Droga krajowa";
+                else if (maxSpeed > 50 && avgSpeed > 30) return "Droga wojewódzka";
+                else if (avgSpeed > 0) return "Miasto";
+                else return "Postój";
+            }
+
+            analyzeDrivingStyle() {
+                if (this.gpsData.speedHistory.length < 10) return "-";
+                
+                // Calculate speed variations
+                let variations = 0;
+                for (let i = 1; i < this.gpsData.speedHistory.length; i++) {
+                    const diff = Math.abs(this.gpsData.speedHistory[i] - this.gpsData.speedHistory[i-1]);
+                    if (diff > 10) variations++;
+                }
+                
+                const variationRate = variations / this.gpsData.speedHistory.length;
+                
+                if (variationRate > 0.3) return "Agresywny";
+                else if (variationRate > 0.15) return "Dynamiczny";
+                else if (variationRate > 0.05) return "Normalny";
+                else return "Spokojny";
+            }
+
+            updateRecommendation(roadType, drivingStyle, avgSpeed) {
+                let recommendation = "";
+                
+                if (!this.isActive) {
+                    recommendation = "Rozpocznij sesję aby zobaczyć analizę";
+                } else if (roadType === "Autostrada" && avgSpeed > 100) {
+                    recommendation = "Jazda autostradowa - rozważ interwał 2-3 min";
+                } else if (roadType === "Miasto" && drivingStyle === "Agresywny") {
+                    recommendation = "Miasto + agresywna jazda - częstsze alerty (30s-1min)";
+                } else if (drivingStyle === "Spokojny" && roadType !== "Miasto") {
+                    recommendation = "Spokojny styl - możesz wydłużyć interwały";
+                } else if (avgSpeed < 30 && this.gpsData.speedHistory.length > 20) {
+                    recommendation = "Ruch miejski - krótsze interwały zalecane";
+                } else {
+                    recommendation = "Optymalne ustawienia dla Twojego stylu jazdy";
+                }
+                
+                this.recommendationDisplay.textContent = recommendation;
+            }
+
+            updateLocationDisplay() {
+                if (this.lastPosition) {
+                    const lat = this.lastPosition.latitude.toFixed(6);
+                    const lon = this.lastPosition.longitude.toFixed(6);
+                    this.currentLocationDisplay.innerHTML = `
+                        <div>Szerokość: ${lat}</div>
+                        <div>Długość: ${lon}</div>
+                        <div style="margin-top: 5px; font-size: 12px;">
+                            Ostatnia aktualizacja: ${new Date().toLocaleTimeString('pl-PL')}
+                        </div>
+                    `;
+                } else {
+                    this.currentLocationDisplay.textContent = "Brak danych GPS";
+                }
+            }
+
+            updateRoutePointsDisplay() {
+                if (this.gpsData.routePoints.length === 0) {
+                    this.routePointsDisplay.textContent = "Brak zapisanych punktów trasy";
+                    return;
+                }
+                
+                const points = this.gpsData.routePoints.slice(-10).reverse(); // Last 10 points, newest first
+                let html = "";
+                
+                points.forEach((point, index) => {
+                    const time = new Date(point.timestamp).toLocaleTimeString('pl-PL', { 
+                        hour: '2-digit', 
+                        minute: '2-digit' 
+                    });
+                    const lat = point.lat.toFixed(4);
+                    const lon = point.lon.toFixed(4);
+                    
+                    html += `
+                        <div style="margin-bottom: 8px; padding: 5px; background: rgba(255,255,255,0.03); border-radius: 4px;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <span>${time}</span>
+                                <span>${point.speed} km/h</span>
+                            </div>
+                            <div style="font-size: 11px; color: #666;">
+                                ${lat}, ${lon}
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                this.routePointsDisplay.innerHTML = html;
+            }
+
+            formatTime(milliseconds) {
+                const totalSeconds = Math.floor(milliseconds / 1000);
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                
+                if (hours > 0) {
+                    return `${hours}h ${minutes}m`;
+                } else {
+                    return `${minutes}:${(totalSeconds % 60).toString().padStart(2, '0')}`;
+                }
+            }
+
+            clearGpsData() {
+                if (confirm('Czy na pewno chcesz wyczyścić wszystkie dane GPS?\n\nTej operacji nie można cofnąć.')) {
+                    this.gpsData = {
+                        maxSpeed: 0,
+                        totalDistance: 0,
+                        speedHistory: [],
+                        timeMoving: 0,
+                        timeStopped: 0,
+                        lastMoveTime: null,
+                        lastStopTime: null,
+                        routePoints: [],
+                        startLocation: null
+                    };
+                    
+                    this.updateGpsDisplay();
+                    alert('Dane GPS zostały wyczyszczone!');
                 }
             }
 
