@@ -173,40 +173,71 @@
             color: white;
         }
 
-        .alert-button {
-            background: #ff1744;
-            color: white;
-            font-size: 28px;
-            font-weight: bold;
-            padding: 40px;
-            border-radius: 20px;
-            animation: pulse 2s infinite;
-            margin-bottom: 20px;
-            box-shadow: 0 0 30px rgba(255, 23, 68, 0.5);
-            border: 3px solid #ff5574;
+        .alert-section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #ff1744, #ff5574);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
-        @keyframes pulse {
-            0% { 
-                transform: scale(1); 
-                box-shadow: 0 0 30px rgba(255, 23, 68, 0.5);
-            }
-            50% { 
-                transform: scale(1.05); 
-                box-shadow: 0 0 50px rgba(255, 23, 68, 0.8);
-            }
-            100% { 
-                transform: scale(1); 
-                box-shadow: 0 0 30px rgba(255, 23, 68, 0.5);
-            }
+        .alert-section.hidden {
+            display: none;
+        }
+
+        .alert-content {
+            text-align: center;
+            pointer-events: none; /* Treść nie przejmuje kliknięć */
         }
 
         .countdown {
-            text-align: center;
-            font-size: 48px;
+            font-size: 72px;
             font-weight: bold;
-            color: #ff1744;
+            color: #ffffff;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px rgba(0,0,0,0.5);
+            animation: countdown-pulse 1s infinite;
+        }
+
+        @keyframes countdown-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .alert-text {
+            font-size: 32px;
+            font-weight: bold;
+            color: #ffffff;
             margin-bottom: 20px;
+            text-shadow: 0 0 15px rgba(0,0,0,0.5);
+            animation: text-glow 2s infinite;
+        }
+
+        @keyframes text-glow {
+            0%, 100% { text-shadow: 0 0 15px rgba(0,0,0,0.5); }
+            50% { text-shadow: 0 0 25px rgba(255,255,255,0.8); }
+        }
+
+        .tap-instruction {
+            font-size: 24px;
+            color: #ffffff;
+            opacity: 0.9;
+            text-shadow: 0 0 10px rgba(0,0,0,0.5);
+            animation: pulse-gentle 3s infinite;
+        }
+
+        @keyframes pulse-gentle {
+            0%, 100% { opacity: 0.9; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
         }
 
         .alarm-flash {
@@ -315,10 +346,11 @@
         </div>
 
         <div class="alert-section hidden" id="alertSection">
-            <div class="countdown" id="countdown">15</div>
-            <button class="btn alert-button" id="alertBtn">
-                🚨 CZUWAM! 🚨
-            </button>
+            <div class="alert-content">
+                <div class="countdown" id="countdown">15</div>
+                <div class="alert-text">🚨 CZUWAM! 🚨</div>
+                <div class="tap-instruction">👆 DOTKNIJ GDZIEKOLWIEK 👆</div>
+            </div>
         </div>
 
         <div class="next-alert" id="nextAlert"></div>
@@ -362,7 +394,6 @@
                 this.pauseBtn = document.getElementById('pauseBtn');
                 this.stopBtn = document.getElementById('stopBtn');
                 this.alertSection = document.getElementById('alertSection');
-                this.alertBtn = document.getElementById('alertBtn');
                 this.countdown = document.getElementById('countdown');
                 this.statusText = document.getElementById('statusText');
                 this.speedDisplay = document.getElementById('speed');
@@ -518,7 +549,11 @@
                 this.startBtn.addEventListener('click', () => this.start());
                 this.pauseBtn.addEventListener('click', () => this.togglePause());
                 this.stopBtn.addEventListener('click', () => this.stop());
-                this.alertBtn.addEventListener('click', () => this.dismissAlert());
+                
+                // Całoekranowy alert - kliknięcie gdziekolwiek
+                this.alertSection.addEventListener('click', () => this.dismissAlert());
+                this.alertSection.addEventListener('touchstart', () => this.dismissAlert());
+                
                 this.intervalSelect.addEventListener('change', (e) => {
                     this.interval = parseInt(e.target.value);
                 });
@@ -752,11 +787,16 @@
 
             showAlert() {
                 this.alertSection.classList.remove('hidden');
+                // Scroll na górę i zablokuj przewijanie
+                document.body.style.overflow = 'hidden';
+                window.scrollTo(0, 0);
                 this.startCountdown();
             }
 
             hideAlert() {
                 this.alertSection.classList.add('hidden');
+                // Przywróć przewijanie
+                document.body.style.overflow = 'auto';
                 this.clearCountdown();
             }
 
@@ -792,6 +832,7 @@
                 this.stopAlarm();
                 this.statusText.textContent = 'Aktywny - Monitorowanie';
                 this.scheduleNextAlert();
+                console.log('✅ Alert dismissed - reakcja użytkownika');
             }
 
             clearAllTimers() {
