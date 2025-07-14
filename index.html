@@ -286,17 +286,340 @@
             color: white;
         }
 
-        .vehicle-stopped {
-            background: #ff9800;
+        /* === MOBILE OPTIMIZATIONS === */
+        
+        /* Większe przyciski na telefonie */
+        @media (max-width: 480px) {
+            .btn {
+                padding: 25px;
+                font-size: 20px;
+                margin-bottom: 20px;
+            }
+            
+            .header h1 {
+                font-size: 28px;
+            }
+            
+            .interval-selector select {
+                padding: 18px;
+                font-size: 18px;
+            }
+            
+            .speed-threshold input[type="number"] {
+                padding: 12px;
+                font-size: 18px;
+                width: 90px;
+            }
+            
+            .countdown {
+                font-size: 84px;
+            }
+            
+            .alert-text {
+                font-size: 36px;
+            }
+            
+            .tap-instruction {
+                font-size: 28px;
+            }
+        }
+
+        /* Bardzo małe ekrany */
+        @media (max-width: 360px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .btn {
+                padding: 20px;
+                font-size: 18px;
+            }
+            
+            .countdown {
+                font-size: 72px;
+            }
+        }
+
+        /* Orientacja landscape na telefonie */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .container {
+                max-width: 90%;
+                padding: 10px;
+            }
+            
+            .header {
+                margin-bottom: 15px;
+            }
+            
+            .header h1 {
+                font-size: 20px;
+                margin-bottom: 5px;
+            }
+            
+            .status-bar, .auto-start-section, .vibration-section {
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+            
+            .btn {
+                padding: 15px;
+                margin-bottom: 10px;
+            }
+            
+            .countdown {
+                font-size: 48px;
+                margin-bottom: 15px;
+            }
+            
+            .alert-text {
+                font-size: 24px;
+            }
+            
+            .tap-instruction {
+                font-size: 18px;
+            }
+        }
+
+        /* Folded phones / narrow screens */
+        @media (max-width: 280px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 22px;
+            }
+            
+            .btn {
+                padding: 18px;
+                font-size: 16px;
+            }
+            
+            .speed-threshold {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .speed-threshold input[type="number"] {
+                margin: 10px 0;
+            }
+        }
+
+        /* Touch improvements */
+        .btn, .checkbox-container, .interval-selector select, 
+        .speed-threshold input[type="number"], .alert-section {
+            touch-action: manipulation; /* Eliminuje delay na dotyk */
+        }
+
+        .btn:active, .alert-section:active {
+            transform: scale(0.98);
+            transition: transform 0.1s;
+        }
+
+        /* Prevent zoom on inputs - iOS */
+        input[type="number"], select {
+            font-size: 16px !important;
+        }
+
+        /* Better checkbox on mobile */
+        @media (max-width: 480px) {
+            .checkbox-container input[type="checkbox"] {
+                width: 24px;
+                height: 24px;
+                margin-right: 15px;
+            }
+            
+            .checkbox-container label {
+                font-size: 16px;
+            }
+        }
+
+        /* Gesture swipe area for alert dismissal */
+        .swipe-hint {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            text-align: center;
+            animation: swipe-animation 3s infinite;
+        }
+
+        @keyframes swipe-animation {
+            0%, 100% { opacity: 0.8; transform: translateX(-50%) translateY(0); }
+            50% { opacity: 1; transform: translateX(-50%) translateY(-10px); }
+        }
+
+        /* High contrast for poor lighting */
+        @media (prefers-contrast: high) {
+            .alert-section {
+                background: linear-gradient(135deg, #ff0000, #ff3333);
+            }
+            
+            .countdown, .alert-text, .tap-instruction {
+                text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+            }
+        }
+
+        /* === NAVIGATION TABS === */
+        .nav-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 15px 10px;
+            text-align: center;
+            background: transparent;
+            border: none;
+            color: #cccccc;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tab.active {
+            background: #4CAF50;
             color: white;
+        }
+
+        .nav-tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        /* === TAB CONTENT === */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* === STATISTICS STYLES === */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #cccccc;
+            text-transform: uppercase;
+        }
+
+        .session-stats {
+            background: rgba(33, 150, 243, 0.1);
+            border: 1px solid rgba(33, 150, 243, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .session-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2196F3;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .total-stats {
+            background: rgba(156, 39, 176, 0.1);
+            border: 1px solid rgba(156, 39, 176, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .total-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #9C27B0;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .clear-stats {
+            width: 100%;
+            padding: 10px;
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid #f44336;
+            border-radius: 8px;
+            color: #f44336;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .clear-stats:hover {
+            background: rgba(244, 67, 54, 0.3);
+        }
+
+        .reaction-indicator {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .reaction-excellent { background: #4CAF50; color: white; }
+        .reaction-good { background: #8BC34A; color: white; }
+        .reaction-ok { background: #FF9800; color: white; }
+        .reaction-slow { background: #f44336; color: white; }
+
+        /* Reduce motion for sensitive users */
+        @media (prefers-reduced-motion: reduce) {
+            .countdown, .alert-text, .tap-instruction {
+                animation: none;
+            }
+            
+            .btn:active, .alert-section:active {
+                transform: none;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🚗 Czuwak Kierowcy 2.0</h1>
+            <h1>Czuwak Kierowcy 2.0</h1>
         </div>
+
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="nav-tab active" id="mainTab">Główne</button>
+            <button class="nav-tab" id="statsTab">Statystyki</button>
+        </div>
+
+        <!-- Main Tab Content -->
+        <div class="tab-content active" id="mainContent">
 
         <div class="status-bar">
             <div class="speed-display">
@@ -323,7 +646,7 @@
         <div class="auto-start-section">
             <div class="checkbox-container">
                 <input type="checkbox" id="autoStartEnabled">
-                <label for="autoStartEnabled">🏎️ Auto-start przy spadku prędkości</label>
+                <label for="autoStartEnabled">Auto-start przy spadku prędkości</label>
             </div>
             <div class="speed-threshold">
                 <span>Uruchom gdy prędkość spadnie poniżej:</span>
@@ -335,25 +658,92 @@
         <div class="vibration-section">
             <div class="checkbox-container">
                 <input type="checkbox" id="vibrationsEnabled">
-                <label for="vibrationsEnabled">📳 Wibracje podczas alarmu</label>
+                <label for="vibrationsEnabled">Wibracje podczas alarmu</label>
+            </div>
+            <div style="font-size: 12px; color: #888; margin-top: 5px; text-align: center;" id="vibrationStatus">
+                Sprawdzanie obsługi wibracji...
             </div>
         </div>
 
         <div class="control-buttons">
-            <button class="btn btn-start" id="startBtn">🟢 Rozpocznij</button>
-            <button class="btn btn-pause hidden" id="pauseBtn">⏸️ Zatrzymaj</button>
-            <button class="btn btn-stop hidden" id="stopBtn">🛑 Zakończ</button>
+            <button class="btn btn-start" id="startBtn">Rozpocznij</button>
+            <button class="btn btn-pause hidden" id="pauseBtn">Zatrzymaj</button>
+            <button class="btn btn-stop hidden" id="stopBtn">Zakończ</button>
         </div>
 
         <div class="alert-section hidden" id="alertSection">
             <div class="alert-content">
                 <div class="countdown" id="countdown">15</div>
-                <div class="alert-text">🚨 CZUWAM! 🚨</div>
-                <div class="tap-instruction">👆 DOTKNIJ GDZIEKOLWIEK 👆</div>
+                <div class="alert-text">CZUWAM!</div>
+                <div class="tap-instruction">DOTKNIJ GDZIEKOLWIEK</div>
+                <div class="swipe-hint">lub przesuń palcem</div>
             </div>
         </div>
 
         <div class="next-alert" id="nextAlert"></div>
+
+        </div>
+        <!-- End Main Tab Content -->
+
+        <!-- Statistics Tab Content -->
+        <div class="tab-content" id="statsContent">
+            
+            <div class="session-stats">
+                <div class="session-title">Bieżąca sesja</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="sessionDuration">0:00</div>
+                        <div class="stat-label">Czas jazdy</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="sessionAlerts">0</div>
+                        <div class="stat-label">Alerty</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="sessionReactions">0</div>
+                        <div class="stat-label">Reakcje</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="sessionSuccess">100%</div>
+                        <div class="stat-label">Skuteczność</div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 10px;">
+                    <strong>Średni czas reakcji:</strong> 
+                    <span id="avgReactionTime">-</span>
+                    <span id="reactionQuality"></span>
+                </div>
+            </div>
+
+            <div class="total-stats">
+                <div class="total-title">Statystyki ogółem</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalSessions">0</div>
+                        <div class="stat-label">Sesji</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalTime">0:00</div>
+                        <div class="stat-label">Całkowity czas</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalReactions">0</div>
+                        <div class="stat-label">Reakcji</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="bestStreak">0</div>
+                        <div class="stat-label">Najlepsza seria</div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 10px;">
+                    <strong>Ostatnia sesja:</strong> <span id="lastSessionDate">-</span>
+                </div>
+            </div>
+
+            <button class="clear-stats" id="clearStatsBtn">Wyczyść wszystkie statystyki</button>
+            
+        </div>
+        <!-- End Statistics Tab Content -->
 
         <audio id="alarmSound" loop preload="auto">
             <source src="alarm.mp3" type="audio/mpeg">
@@ -381,11 +771,27 @@
                 this.wasAboveThreshold = false;
                 this.vibrationsEnabled = false;
                 
+                // Mobile optimization
+                this.touchStartY = 0;
+                this.touchStartX = 0;
+                
+                // Statistics
+                this.sessionStartTime = null;
+                this.sessionAlerts = 0;
+                this.sessionReactions = 0;
+                this.sessionMissed = 0;
+                this.reactionTimes = [];
+                this.currentStreak = 0;
+                this.statsUpdateInterval = null;
+                
                 this.initElements();
                 this.initEventListeners();
                 this.initGeolocation();
                 this.requestWakeLock();
                 this.createAlarmSound();
+                this.initMobileOptimizations();
+                this.loadStatistics();
+                this.checkVibrationSupport();
             }
 
             initElements() {
@@ -405,6 +811,27 @@
                 this.autoStartCheckbox = document.getElementById('autoStartEnabled');
                 this.speedThresholdInput = document.getElementById('speedThreshold');
                 this.vibrationsCheckbox = document.getElementById('vibrationsEnabled');
+                
+                // Navigation tabs
+                this.mainTab = document.getElementById('mainTab');
+                this.statsTab = document.getElementById('statsTab');
+                this.mainContent = document.getElementById('mainContent');
+                this.statsContent = document.getElementById('statsContent');
+                
+                // Statistics elements
+                this.sessionDuration = document.getElementById('sessionDuration');
+                this.sessionAlerts = document.getElementById('sessionAlerts');
+                this.sessionReactions = document.getElementById('sessionReactions');
+                this.sessionSuccess = document.getElementById('sessionSuccess');
+                this.avgReactionTime = document.getElementById('avgReactionTime');
+                this.reactionQuality = document.getElementById('reactionQuality');
+                this.totalSessions = document.getElementById('totalSessions');
+                this.totalTime = document.getElementById('totalTime');
+                this.totalReactions = document.getElementById('totalReactions');
+                this.bestStreak = document.getElementById('bestStreak');
+                this.lastSessionDate = document.getElementById('lastSessionDate');
+                this.clearStatsBtn = document.getElementById('clearStatsBtn');
+                this.vibrationStatus = document.getElementById('vibrationStatus');
             }
 
             createAlarmSound() {
@@ -412,12 +839,12 @@
                 this.useExternalAudio = false;
                 
                 this.alarmSound.addEventListener('loadeddata', () => {
-                    console.log('✅ Własny plik alarm.mp3 załadowany pomyślnie!');
+                    console.log('Własny plik alarm.mp3 załadowany pomyślnie!');
                     this.useExternalAudio = true;
                 });
 
                 this.alarmSound.addEventListener('error', () => {
-                    console.log('❌ Nie można załadować alarm.mp3, używam syntetycznego dźwięku');
+                    console.log('Nie można załadować alarm.mp3, używam syntetycznego dźwięku');
                     this.useExternalAudio = false;
                 });
 
@@ -449,9 +876,9 @@
 
                     this.alarmBuffer = this.createAlarmBuffer();
                     this.alarmSource = null;
-                    console.log('🔄 Syntetyczny dźwięk przygotowany jako backup');
+                    console.log('Syntetyczny dźwięk przygotowany jako backup');
                 } catch (error) {
-                    console.log('⚠️ Web Audio API nie jest dostępne');
+                    console.log('Web Audio API nie jest dostępne');
                 }
             }
 
@@ -470,19 +897,19 @@
                         
                         if (playPromise !== undefined) {
                             playPromise.then(() => {
-                                console.log('🎵 Odtwarzam Twój plik alarm.mp3');
+                                console.log('Odtwarzam Twój plik alarm.mp3');
                             }).catch(error => {
-                                console.log('❌ Błąd odtwarzania alarm.mp3, przełączam na syntetyczny');
+                                console.log('Błąd odtwarzania alarm.mp3, przełączam na syntetyczny');
                                 this.playSyntheticAlarm();
                             });
                         }
                     } catch (error) {
-                        console.log('❌ Błąd odtwarzania alarm.mp3, przełączam na syntetyczny');
+                        console.log('Błąd odtwarzania alarm.mp3, przełączam na syntetyczny');
                         this.playSyntheticAlarm();
                     }
                 } else {
                     // Użyj syntetycznego dźwięku jako backup
-                    console.log('🔄 Używam syntetycznego dźwięku (backup)');
+                    console.log('Używam syntetycznego dźwięku (backup)');
                     this.playSyntheticAlarm();
                 }
                 
@@ -501,28 +928,108 @@
                     this.alarmSource.loop = true;
                     this.alarmSource.connect(audioContext.destination);
                     this.alarmSource.start();
-                    console.log('🔊 Odtwarzam syntetyczny alarm');
+                    console.log('Odtwarzam syntetyczny alarm');
                 } catch (error) {
-                    console.log('❌ Nie można odtworzyć żadnego dźwięku');
+                    console.log('Nie można odtworzyć żadnego dźwięku');
                 }
             }
 
             triggerVibration() {
+                if (!this.vibrationsEnabled) return;
+                
                 if ('vibrate' in navigator) {
-                    // Intensywny wzór wibracji dla alarmu: długo-krótko-długo-krótko-bardzo długo
-                    navigator.vibrate([800, 200, 800, 200, 1500]);
-                    console.log('Wibracje uruchomione');
+                    try {
+                        // Intensywny wzór wibracji dla alarmu: długo-krótko-długo-krótko-bardzo długo
+                        const success = navigator.vibrate([800, 200, 800, 200, 1500]);
+                        console.log('Wibracje uruchomione:', success);
+                        
+                        // Dodatkowe wibracje co 3 sekundy podczas alarmu
+                        this.vibrationInterval = setInterval(() => {
+                            if (this.isActive && !this.alertSection.classList.contains('hidden')) {
+                                navigator.vibrate([500, 100, 500]);
+                            } else {
+                                this.stopVibration();
+                            }
+                        }, 3000);
+                        
+                    } catch (error) {
+                        console.log('Błąd wibracji:', error);
+                    }
                 } else {
                     console.log('Wibracje nie są obsługiwane w tej przeglądarce');
                 }
             }
 
+            stopVibration() {
+                if (this.vibrationInterval) {
+                    clearInterval(this.vibrationInterval);
+                    this.vibrationInterval = null;
+                }
+                
+                // Zatrzymaj wszystkie wibracje
+                if ('vibrate' in navigator) {
+                    navigator.vibrate(0);
+                }
+            }
+
             testVibration() {
                 if ('vibrate' in navigator) {
-                    // Krótki test wibracji przy włączeniu opcji
-                    navigator.vibrate([200, 100, 200]);
-                    console.log('Test wibracji');
+                    try {
+                        // Krótki test wibracji przy włączeniu opcji
+                        const success = navigator.vibrate([200, 100, 200]);
+                        console.log('Test wibracji:', success);
+                        
+                        if (success) {
+                            this.vibrationStatus.textContent = 'Wibracje działają';
+                            this.vibrationStatus.style.color = '#4CAF50';
+                        } else {
+                            this.vibrationStatus.textContent = 'Wibracje mogą nie działać';
+                            this.vibrationStatus.style.color = '#ff9800';
+                        }
+                    } catch (error) {
+                        this.vibrationStatus.textContent = 'Błąd wibracji';
+                        this.vibrationStatus.style.color = '#f44336';
+                    }
+                } else {
+                    this.vibrationStatus.textContent = 'Brak obsługi wibracji';
+                    this.vibrationStatus.style.color = '#f44336';
                 }
+            }
+
+            checkVibrationSupport() {
+                const userAgent = navigator.userAgent;
+                const isIOS = /iPad|iPhone|iPod/.test(userAgent);
+                const isAndroid = /Android/.test(userAgent);
+                const isDesktop = !isIOS && !isAndroid;
+
+                if ('vibrate' in navigator) {
+                    if (isIOS) {
+                        this.vibrationStatus.textContent = 'iOS - wibracje mogą nie działać w przeglądarce';
+                        this.vibrationStatus.style.color = '#ff9800';
+                    } else if (isAndroid) {
+                        this.vibrationStatus.textContent = 'Android - wibracje powinny działać';
+                        this.vibrationStatus.style.color = '#4CAF50';
+                    } else if (isDesktop) {
+                        this.vibrationStatus.textContent = 'Desktop - brak wibracji';
+                        this.vibrationStatus.style.color = '#888';
+                        this.vibrationsCheckbox.disabled = true;
+                    } else {
+                        this.vibrationStatus.textContent = 'Nieznane urządzenie - sprawdź test';
+                        this.vibrationStatus.style.color = '#888';
+                    }
+                } else {
+                    this.vibrationStatus.textContent = 'Przeglądarka nie obsługuje wibracji';
+                    this.vibrationStatus.style.color = '#f44336';
+                    this.vibrationsCheckbox.disabled = true;
+                }
+
+                console.log('Obsługa wibracji:', {
+                    hasVibrate: 'vibrate' in navigator,
+                    userAgent: userAgent,
+                    isIOS: isIOS,
+                    isAndroid: isAndroid,
+                    isDesktop: isDesktop
+                });
             }
 
             stopAlarm() {
@@ -541,6 +1048,9 @@
                     }
                     this.alarmSource = null;
                 }
+
+                // Zatrzymaj wibracje
+                this.stopVibration();
                 
                 document.body.classList.remove('alarm-flash');
             }
@@ -552,7 +1062,23 @@
                 
                 // Całoekranowy alert - kliknięcie gdziekolwiek
                 this.alertSection.addEventListener('click', () => this.dismissAlert());
-                this.alertSection.addEventListener('touchstart', () => this.dismissAlert());
+                this.alertSection.addEventListener('touchstart', (e) => {
+                    this.touchStartY = e.touches[0].clientY;
+                    this.touchStartX = e.touches[0].clientX;
+                });
+                this.alertSection.addEventListener('touchend', (e) => this.handleTouchEnd(e));
+                
+                // Zapobieganie przypadkowym gestom
+                this.alertSection.addEventListener('touchmove', (e) => {
+                    e.preventDefault(); // Zapobiega przewijaniu podczas alertu
+                });
+
+                // Navigation tabs
+                this.mainTab.addEventListener('click', () => this.switchTab('main'));
+                this.statsTab.addEventListener('click', () => this.switchTab('stats'));
+                
+                // Statistics
+                this.clearStatsBtn.addEventListener('click', () => this.clearAllStats());
                 
                 this.intervalSelect.addEventListener('change', (e) => {
                     this.interval = parseInt(e.target.value);
@@ -690,7 +1216,7 @@
 
                 // Jeśli prędkość spadła poniżej progu i wcześniej była powyżej
                 if (this.wasAboveThreshold && this.currentSpeed < this.speedThreshold && this.currentSpeed > 10) {
-                    this.statusText.textContent = `🚀 AUTO-START! Prędkość spadła do ${this.currentSpeed} km/h`;
+                    this.statusText.textContent = `AUTO-START! Prędkość spadła do ${this.currentSpeed} km/h`;
                     setTimeout(() => {
                         this.start();
                     }, 2000); // 2 sekundy opóźnienia na przygotowanie
@@ -701,10 +1227,24 @@
                 this.isActive = true;
                 this.isPaused = false;
                 this.wasAboveThreshold = false; // Reset auto-start
+                
+                // Reset session statistics
+                this.sessionStartTime = Date.now();
+                this.sessionAlerts = 0;
+                this.sessionReactions = 0;
+                this.sessionMissed = 0;
+                this.reactionTimes = [];
+                this.currentStreak = 0;
+                this.alertStartTime = null;
+                
                 this.startBtn.classList.add('hidden');
                 this.pauseBtn.classList.remove('hidden');
                 this.stopBtn.classList.remove('hidden');
                 this.statusText.textContent = 'Aktywny - Monitorowanie';
+                
+                // Start statistics update interval
+                this.statsUpdateInterval = setInterval(() => this.updateSessionStats(), 1000);
+                
                 this.scheduleNextAlert();
             }
 
@@ -715,6 +1255,13 @@
                 this.clearAllTimers();
                 this.stopAlarm();
                 this.hideAlert();
+                
+                // Stop statistics updates and save session
+                if (this.statsUpdateInterval) {
+                    clearInterval(this.statsUpdateInterval);
+                    this.statsUpdateInterval = null;
+                }
+                this.saveSessionStats();
                 
                 this.startBtn.classList.remove('hidden');
                 this.pauseBtn.classList.add('hidden');
@@ -790,6 +1337,9 @@
                 // Scroll na górę i zablokuj przewijanie
                 document.body.style.overflow = 'hidden';
                 window.scrollTo(0, 0);
+                
+                this.sessionAlerts++;
+                this.alertStartTime = Date.now();
                 this.startCountdown();
             }
 
@@ -824,15 +1374,252 @@
             triggerAlarm() {
                 this.clearCountdown();
                 this.playAlarm();
-                this.statusText.textContent = '🚨 ALARM! Kliknij przycisk!';
+                this.statusText.textContent = 'ALARM! Kliknij przycisk!';
+                this.sessionMissed++;
+                this.currentStreak = 0; // Reset streak na missed alert
             }
 
             dismissAlert() {
+                const reactionTime = this.alertStartTime ? Date.now() - this.alertStartTime : 0;
+                this.sessionReactions++;
+                this.reactionTimes.push(reactionTime);
+                this.currentStreak++;
+                
                 this.hideAlert();
                 this.stopAlarm();
                 this.statusText.textContent = 'Aktywny - Monitorowanie';
                 this.scheduleNextAlert();
-                console.log('✅ Alert dismissed - reakcja użytkownika');
+                console.log(`Alert dismissed - reakcja w ${reactionTime}ms`);
+            }
+
+            handleTouchEnd(e) {
+                const touchEndY = e.changedTouches[0].clientY;
+                const touchEndX = e.changedTouches[0].clientX;
+                
+                // Sprawdź czy to było zwykłe dotknięcie czy swipe
+                const deltaY = Math.abs(touchEndY - this.touchStartY);
+                const deltaX = Math.abs(touchEndX - this.touchStartX);
+                
+                // Jeśli ruch był minimalny (zwykłe dotknięcie) lub znaczny swipe
+                if ((deltaY < 50 && deltaX < 50) || deltaY > 100 || deltaX > 100) {
+                    this.dismissAlert();
+                }
+            }
+
+            initMobileOptimizations() {
+                // Wykryj orientację i dostosuj UI
+                this.handleOrientationChange();
+                
+                // Nasłuchuj zmiany orientacji
+                window.addEventListener('orientationchange', () => {
+                    setTimeout(() => this.handleOrientationChange(), 200);
+                });
+                
+                // Nasłuchuj zmiany rozmiaru okna
+                window.addEventListener('resize', () => {
+                    this.handleResize();
+                });
+                
+                // Dodaj meta tag dla lepszej obsługi viewport (jeśli nie ma)
+                this.ensureViewportMeta();
+                
+                // Wykryj czy to urządzenie mobilne
+                this.detectMobileDevice();
+            }
+
+            handleOrientationChange() {
+                const orientation = window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
+                document.body.setAttribute('data-orientation', orientation);
+                
+                if (orientation === 'landscape' && window.innerHeight < 500) {
+                    document.body.classList.add('landscape-mobile');
+                } else {
+                    document.body.classList.remove('landscape-mobile');
+                }
+                
+                console.log('Orientacja:', orientation);
+            }
+
+            handleResize() {
+                // Dostosuj UI do nowego rozmiaru
+                if (this.isActive && !this.alertSection.classList.contains('hidden')) {
+                    // Jeśli alert jest aktywny, upewnij się że zajmuje cały ekran
+                    this.alertSection.style.height = window.innerHeight + 'px';
+                }
+            }
+
+            ensureViewportMeta() {
+                let viewport = document.querySelector('meta[name="viewport"]');
+                if (!viewport) {
+                    viewport = document.createElement('meta');
+                    viewport.name = 'viewport';
+                    viewport.content = 'width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0';
+                    document.head.appendChild(viewport);
+                }
+            }
+
+            detectMobileDevice() {
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+                
+                if (isMobile || isTouchDevice) {
+                    document.body.classList.add('mobile-device');
+                    console.log('Urządzenie mobilne wykryte');
+                } else {
+                    document.body.classList.add('desktop-device');
+                    console.log('Urządzenie desktop wykryte');
+                }
+            }
+
+            // === STATISTICS FUNCTIONS ===
+            
+            switchTab(tab) {
+                if (tab === 'main') {
+                    this.mainTab.classList.add('active');
+                    this.statsTab.classList.remove('active');
+                    this.mainContent.classList.add('active');
+                    this.statsContent.classList.remove('active');
+                } else if (tab === 'stats') {
+                    this.mainTab.classList.remove('active');
+                    this.statsTab.classList.add('active');
+                    this.mainContent.classList.remove('active');
+                    this.statsContent.classList.add('active');
+                    this.updateAllStats(); // Refresh stats when viewing
+                }
+            }
+
+            updateSessionStats() {
+                if (!this.sessionStartTime) return;
+
+                const duration = Date.now() - this.sessionStartTime;
+                const minutes = Math.floor(duration / 60000);
+                const seconds = Math.floor((duration % 60000) / 1000);
+                
+                this.sessionDuration.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                this.sessionAlerts.textContent = this.sessionAlerts;
+                this.sessionReactions.textContent = this.sessionReactions;
+                
+                // Calculate success rate
+                const total = this.sessionReactions + this.sessionMissed;
+                const successRate = total > 0 ? Math.round((this.sessionReactions / total) * 100) : 100;
+                this.sessionSuccess.textContent = `${successRate}%`;
+                
+                // Calculate average reaction time
+                if (this.reactionTimes.length > 0) {
+                    const avgTime = this.reactionTimes.reduce((a, b) => a + b, 0) / this.reactionTimes.length;
+                    const avgSeconds = (avgTime / 1000).toFixed(1);
+                    this.avgReactionTime.textContent = `${avgSeconds}s`;
+                    
+                    // Quality indicator
+                    let quality = '';
+                    if (avgTime < 3000) quality = '<span class="reaction-excellent">Doskonały!</span>';
+                    else if (avgTime < 5000) quality = '<span class="reaction-good">Dobry</span>';
+                    else if (avgTime < 8000) quality = '<span class="reaction-ok">W porządku</span>';
+                    else quality = '<span class="reaction-slow">Wolny</span>';
+                    
+                    this.reactionQuality.innerHTML = quality;
+                } else {
+                    this.avgReactionTime.textContent = '-';
+                    this.reactionQuality.innerHTML = '';
+                }
+            }
+
+            saveSessionStats() {
+                if (!this.sessionStartTime) return;
+
+                const stats = this.loadStoredStats();
+                const sessionDuration = Date.now() - this.sessionStartTime;
+                
+                // Update totals
+                stats.totalSessions++;
+                stats.totalTime += sessionDuration;
+                stats.totalReactions += this.sessionReactions;
+                
+                // Update best streak
+                if (this.currentStreak > stats.bestStreak) {
+                    stats.bestStreak = this.currentStreak;
+                }
+                
+                stats.lastSessionDate = new Date().toLocaleDateString('pl-PL');
+                
+                // Save to localStorage
+                try {
+                    localStorage.setItem('czuwak_stats', JSON.stringify(stats));
+                    console.log('Statystyki sesji zapisane');
+                } catch (error) {
+                    console.log('Błąd zapisywania statystyk');
+                }
+            }
+
+            loadStatistics() {
+                this.updateAllStats();
+            }
+
+            loadStoredStats() {
+                try {
+                    const stored = localStorage.getItem('czuwak_stats');
+                    if (stored) {
+                        return JSON.parse(stored);
+                    }
+                } catch (error) {
+                    console.log('Błąd odczytywania statystyk');
+                }
+                
+                // Default stats
+                return {
+                    totalSessions: 0,
+                    totalTime: 0,
+                    totalReactions: 0,
+                    bestStreak: 0,
+                    lastSessionDate: '-'
+                };
+            }
+
+            updateAllStats() {
+                // Update session stats
+                this.updateSessionStats();
+                
+                // Update total stats
+                const stats = this.loadStoredStats();
+                
+                this.totalSessions.textContent = stats.totalSessions;
+                
+                // Format total time
+                const totalMinutes = Math.floor(stats.totalTime / 60000);
+                const totalHours = Math.floor(totalMinutes / 60);
+                const remainingMinutes = totalMinutes % 60;
+                
+                if (totalHours > 0) {
+                    this.totalTime.textContent = `${totalHours}h ${remainingMinutes}m`;
+                } else {
+                    this.totalTime.textContent = `${totalMinutes}m`;
+                }
+                
+                this.totalReactions.textContent = stats.totalReactions;
+                this.bestStreak.textContent = stats.bestStreak;
+                this.lastSessionDate.textContent = stats.lastSessionDate;
+            }
+
+            clearAllStats() {
+                if (confirm('Czy na pewno chcesz wyczyścić wszystkie statystyki?\n\nTej operacji nie można cofnąć.')) {
+                    try {
+                        localStorage.removeItem('czuwak_stats');
+                        
+                        // Reset session stats
+                        this.sessionAlerts = 0;
+                        this.sessionReactions = 0;
+                        this.sessionMissed = 0;
+                        this.reactionTimes = [];
+                        this.currentStreak = 0;
+                        
+                        this.updateAllStats();
+                        console.log('Wszystkie statystyki wyczyszczone');
+                        
+                        alert('Statystyki zostały wyczyszczone!');
+                    } catch (error) {
+                        alert('Błąd podczas czyszczenia statystyk');
+                    }
+                }
             }
 
             clearAllTimers() {
