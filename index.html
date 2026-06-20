@@ -25,7 +25,6 @@ body{
 .head h1{font-size:22px;color:var(--green);font-weight:700;letter-spacing:.5px}
 .head .sub{font-size:12px;color:var(--txt3);margin-top:2px}
 
-/* TABS */
 .tabs{display:flex;gap:4px;background:rgba(255,255,255,.04);border-radius:12px;padding:4px;margin-bottom:18px}
 .tab{flex:1;padding:11px 4px;border:none;background:transparent;color:var(--txt2);
   font-size:11px;font-weight:700;border-radius:9px;cursor:pointer;transition:var(--tr)}
@@ -35,11 +34,9 @@ body{
 .page.on{display:block}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-/* CARDS */
 .card{background:var(--card);border:1px solid var(--card-br);border-radius:var(--r);padding:16px;margin-bottom:16px}
 .card-t{font-size:13px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
 
-/* STATUS */
 .status{text-align:center}
 .speed{font-size:30px;font-weight:800;letter-spacing:1px}
 .speed small{font-size:14px;color:var(--txt3);font-weight:400}
@@ -49,7 +46,6 @@ body{
 .stat-line{font-size:14px;color:var(--txt2);margin-top:10px}
 .gps-line{font-size:11px;color:var(--txt3);margin-top:6px}
 
-/* CONTROLS */
 .lbl{display:block;font-size:14px;margin-bottom:8px;color:var(--txt2)}
 select,input[type=number]{
   width:100%;padding:14px;font-size:16px;border:none;border-radius:10px;
@@ -66,8 +62,13 @@ select,input[type=number]{
 .thr{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
 .thr input{width:80px;text-align:center;padding:8px}
 .thr span{font-size:13px;color:var(--txt2)}
+.vib-status{font-size:12px;color:var(--txt3);margin:4px 0 0;line-height:1.4}
+.mini-btn{margin-top:10px;padding:11px;width:100%;background:rgba(156,39,176,.15);
+  border:1px solid var(--purple);border-radius:10px;color:#ce93d8;font-size:13px;
+  font-weight:700;cursor:pointer;transition:var(--tr)}
+.mini-btn:active{transform:scale(.97)}
+.mini-btn:disabled{opacity:.4;cursor:not-allowed}
 
-/* BUTTONS */
 .btn{width:100%;padding:20px;font-size:18px;font-weight:800;border:none;border-radius:14px;
   cursor:pointer;transition:var(--tr);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
 .btn:active{transform:scale(.97)}
@@ -77,7 +78,6 @@ select,input[type=number]{
 .hidden{display:none!important}
 .next{text-align:center;font-size:15px;color:var(--green);font-weight:700;margin-top:4px;min-height:20px}
 
-/* ===== FULLSCREEN ALERT (RDZEŃ) ===== */
 .alert{
   position:fixed;inset:0;z-index:9999;
   background:linear-gradient(160deg,#1b5e20,#2e7d32);
@@ -86,13 +86,9 @@ select,input[type=number]{
 }
 .alert.hidden{display:none}
 .alert.flash{animation:flash .4s steps(1) infinite}
-@keyframes flash{
-  0%{background:#d50000}
-  50%{background:#1a1a1a}
-}
+@keyframes flash{0%{background:#d50000}50%{background:#1a1a1a}}
 .alert-inner{pointer-events:none}
-.count{
-  font-size:clamp(120px,42vw,260px);font-weight:900;line-height:1;
+.count{font-size:clamp(120px,42vw,260px);font-weight:900;line-height:1;
   text-shadow:0 0 40px rgba(0,0,0,.5);animation:beat 1s ease-in-out infinite}
 @keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
 .alert-word{font-size:clamp(40px,12vw,72px);font-weight:900;letter-spacing:3px;margin-top:10px;
@@ -104,7 +100,6 @@ select,input[type=number]{
 .alert-react{position:absolute;top:env(safe-area-inset-top,16px);left:0;right:0;text-align:center;
   font-size:13px;opacity:.6;padding-top:12px}
 
-/* STATS GRID */
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .cell{background:rgba(255,255,255,.05);border-radius:10px;padding:14px;text-align:center}
 .cell .v{font-size:24px;font-weight:800;color:var(--green)}
@@ -118,7 +113,6 @@ canvas{width:100%;height:140px;margin-top:8px}
 .clear{width:100%;padding:11px;background:rgba(244,67,54,.15);border:1px solid var(--red);
   border-radius:10px;color:var(--red);font-size:13px;font-weight:700;cursor:pointer;margin-top:6px}
 
-/* ACHIEVEMENTS */
 .ach{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .ach-i{background:rgba(255,255,255,.05);border:1px solid var(--card-br);border-radius:12px;
   padding:14px;text-align:center;opacity:.4;transition:var(--tr)}
@@ -127,7 +121,6 @@ canvas{width:100%;height:140px;margin-top:8px}
 .ach-i .n{font-size:13px;font-weight:700}
 .ach-i .d{font-size:11px;color:var(--txt3);margin-top:3px}
 
-/* TRAINING */
 .train{text-align:center}
 .train-box{height:200px;border-radius:14px;display:flex;flex-direction:column;
   justify-content:center;align-items:center;cursor:pointer;font-size:20px;font-weight:800;
@@ -158,7 +151,6 @@ canvas{width:100%;height:140px;margin-top:8px}
     <button class="tab" data-tab="train">Trening</button>
   </div>
 
-  <!-- ===== GŁÓWNA ===== -->
   <div class="page on" id="main">
     <div class="card status">
       <div class="speed"><span id="speed">--</span> <small>km/h</small></div>
@@ -168,6 +160,7 @@ canvas{width:100%;height:140px;margin-top:8px}
     </div>
 
     <div class="card">
+
       <span class="lbl">Interwał przypomnień</span>
       <select id="interval">
         <option value="30">co 30 sekund</option>
@@ -199,7 +192,10 @@ canvas{width:100%;height:140px;margin-top:8px}
       <div class="row">
         <input type="checkbox" id="vibChk"><label for="vibChk">Wibracje podczas alarmu</label>
       </div>
-      <div class="row">
+      <div class="vib-status" id="vibStatus">Sprawdzanie obsługi wibracji…</div>
+      <button class="mini-btn" id="vibTest">Testuj wibracje</button>
+
+      <div class="row" style="margin-top:16px">
         <input type="checkbox" id="voiceChk"><label for="voiceChk">Komunikaty głosowe</label>
       </div>
       <div class="row">
@@ -208,7 +204,6 @@ canvas{width:100%;height:140px;margin-top:8px}
       <div class="thr">
         <span>Próg:</span><input type="number" id="thr" value="120" min="50" max="200" step="10"><span>km/h</span>
       </div>
-      <div class="hint" id="capHint"></div>
     </div>
 
     <button class="btn start" id="startBtn">Rozpocznij</button>
@@ -217,7 +212,6 @@ canvas{width:100%;height:140px;margin-top:8px}
     <div class="next" id="next"></div>
   </div>
 
-  <!-- ===== STATYSTYKI ===== -->
   <div class="page" id="stats">
     <div class="card">
       <div class="card-t">Bieżąca sesja</div>
@@ -243,7 +237,6 @@ canvas{width:100%;height:140px;margin-top:8px}
     </div>
   </div>
 
-  <!-- ===== GPS ===== -->
   <div class="page" id="gps">
     <div class="card">
       <div class="card-t">GPS — bieżąca sesja</div>
@@ -271,7 +264,6 @@ canvas{width:100%;height:140px;margin-top:8px}
     </div>
   </div>
 
-  <!-- ===== ODZNAKI ===== -->
   <div class="page" id="ach">
     <div class="card">
       <div class="card-t">Twoje osiągnięcia</div>
@@ -279,7 +271,6 @@ canvas{width:100%;height:140px;margin-top:8px}
     </div>
   </div>
 
-  <!-- ===== TRENING ===== -->
   <div class="page" id="train">
     <div class="card train">
       <div class="card-t">Test czasu reakcji</div>
@@ -290,7 +281,6 @@ canvas{width:100%;height:140px;margin-top:8px}
   </div>
 </div>
 
-<!-- FULLSCREEN ALERT -->
 <div class="alert hidden" id="alert">
   <div class="alert-react" id="alertReact"></div>
   <div class="alert-inner">
@@ -311,15 +301,16 @@ class Czuwak{
     this.interval=60; this.reactWindow=15; this.soundProfile='normal';
     this.vib=false; this.voice=false; this.auto=false; this.thr=120; this.wasAbove=false;
     this.speed=0; this.moving=false; this.gpsActive=false; this.lastPos=null;
-    this.timers={alert:null,count:null,next:null,stats:null};
+    this.timers={alert:null,count:null,next:null,stats:null,vib:null};
     this.alarm={ctx:null,osc:null,gain:null,pat:null};
+    this.wl=null;
     this.sess=this.blankSess();
     this.gps=this.blankGps();
     this.train={state:'idle',t0:0,timer:null};
     this.initEvents(); this.initGPS(); this.wakeLock();
     this.loadTotals(); this.renderAch(); this.detectVib();
   }
-  blankSess(){return{start:null,alerts:0,react:0,missed:0,times:[],streak:0,t0:null};}
+  blankSess(){return{start:null,alerts:0,react:0,missed:0,times:[],streak:0,t0:null,alertT0:null};}
   blankGps(){return{max:0,dist:0,hist:[],move:0,stop:0,lastMove:null,lastStop:null,start:null};}
 
   initEvents(){
@@ -337,13 +328,13 @@ class Czuwak{
       b.classList.add('on'); this.soundProfile=b.dataset.s; this.previewSound();
     });
     $('vibChk').onchange=e=>{this.vib=e.target.checked; if(e.target.checked)this.testVib();};
+    $('vibTest').onclick=()=>this.testVib();
     $('voiceChk').onchange=e=>{this.voice=e.target.checked; if(e.target.checked)this.speak('Komunikaty włączone');};
     $('autoChk').onchange=e=>{this.auto=e.target.checked;
       if(!this.active)$('statusTxt').textContent=e.target.checked?'Gotowy do auto-startu':'Nieaktywny';};
     $('thr').onchange=e=>this.thr=+e.target.value;
     $('clrStats').onclick=()=>this.clearStats();
     $('clrGps').onclick=()=>this.clearGps();
-    // ALERT — dotknij gdziekolwiek
     const a=$('alert');
     a.onclick=()=>this.dismiss();
     a.ontouchstart=e=>{this.ty=e.touches[0].clientY;this.tx=e.touches[0].clientX;};
@@ -351,9 +342,8 @@ class Czuwak{
       dx=Math.abs(e.changedTouches[0].clientX-this.tx);
       if((dy<60&&dx<60)||dy>80||dx>80)this.dismiss();};
     a.ontouchmove=e=>e.preventDefault();
-    // Trening
     $('trBox').onclick=()=>this.trainTap();
-    document.onvisibilitychange=()=>{if(!document.hidden&&this.active)this.wakeLock();};
+    document.onvisibilitychange=()=>{ if(document.visibilityState==='visible') this.wakeLock(); };
   }
 
   tab(id){
@@ -368,6 +358,7 @@ class Czuwak{
     this.active=true; this.paused=false; this.wasAbove=false;
     this.sess=this.blankSess(); this.sess.start=Date.now(); this.sess.t0=Date.now();
     this.gps=this.blankGps(); this.gps.lastMove=Date.now(); this.gps.start=this.lastPos;
+    this.wakeLock();
     $('startBtn').classList.add('hidden');
     $('pauseBtn').classList.remove('hidden'); $('stopBtn').classList.remove('hidden');
     $('statusTxt').textContent='Aktywny — monitorowanie';
@@ -395,7 +386,6 @@ class Czuwak{
   }
   scheduleAlert(){
     if(!this.active||this.paused)return;
-    // auto-pauza tylko gdy GPS aktywny i pojazd faktycznie stoi
     if(this.gpsActive&&!this.moving&&this.speed<1){
       $('statusTxt').textContent='Wstrzymany — pojazd stoi';
       this.timers.next=setTimeout(()=>this.scheduleAlert(),5000); return;
@@ -428,17 +418,17 @@ class Czuwak{
       t--;
       if(t<=0){this.triggerAlarm();}
       else{$('count').textContent=t;
-        if(t<=5&&this.vib&&'vibrate'in navigator)navigator.vibrate(100);}
+        if(t<=5&&this.vib&&'vibrate'in navigator)navigator.vibrate(90);}
     },1000);
   }
   triggerAlarm(){
     clearInterval(this.timers.count); this.timers.count=null;
     $('count').textContent='0';
-    $('alert').classList.add('flash');            // MIGAJĄCY CZERWONY EKRAN
+    $('alert').classList.add('flash');
     $('alertReact').textContent='ALARM! Natychmiast dotknij ekranu!';
     this.startAlarm();
     this.speak('Reaguj natychmiast');
-    if(this.vib&&'vibrate'in navigator)navigator.vibrate([600,200,600,200,1000]);
+    this.startVibLoop([500,150,500,150,800]);
     this.sess.missed++; this.sess.streak=0;
   }
   dismiss(){
@@ -456,12 +446,63 @@ class Czuwak{
     a.style.pointerEvents='none';
     document.body.style.overflow='';
     clearInterval(this.timers.count); this.timers.count=null;
+    this.stopVib();
+  }
+
+  /* ====== WIBRACJE ====== */
+  startVibLoop(pattern){
+    if(!this.vib||!('vibrate'in navigator))return;
+    navigator.vibrate(pattern);
+    clearInterval(this.timers.vib);
+    this.timers.vib=setInterval(()=>{
+      if(this.vib && !$('alert').classList.contains('hidden')) navigator.vibrate(pattern);
+      else this.stopVib();
+    },2600);
+  }
+  stopVib(){
+    if(this.timers.vib){clearInterval(this.timers.vib);this.timers.vib=null;}
+    if('vibrate'in navigator)navigator.vibrate(0);
+  }
+  setVibStatus(ok,msg){
+    const el=$('vibStatus');
+    el.textContent=msg;
+    el.style.color=ok?'var(--green)':'var(--orange)';
+  }
+  testVib(){
+    if(!('vibrate'in navigator)){this.setVibStatus(false,'Brak obsługi wibracji w tej przeglądarce');return;}
+    const ok=navigator.vibrate([200,100,200]);
+    this.setVibStatus(ok, ok
+      ? 'Wibracja wysłana — poczuj telefon. Jeśli nie czujesz, sprawdź wibracje dotykowe w ustawieniach systemu.'
+      : 'Przeglądarka odrzuciła wibrację (tryb cichy lub brak zgody?)');
+  }
+  detectVib(){
+    const ua=navigator.userAgent;
+    const isIOS=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+    const isAndroid=/Android/.test(ua);
+    const hasTouch='ontouchstart'in window||navigator.maxTouchPoints>0;
+    if(!('vibrate'in navigator)){
+      $('vibChk').disabled=true; $('vibTest').disabled=true;
+      this.setVibStatus(false, isIOS
+        ? 'iPhone/iPad nie obsługują wibracji w przeglądarce — to ograniczenie iOS, nie da się tego włączyć.'
+        : 'Ta przeglądarka nie obsługuje wibracji.');
+      return;
+    }
+    if(isIOS){
+      this.setVibStatus(false,'Na iOS wibracje w przeglądarce zwykle nie działają (ograniczenie Apple).');
+    }else if(!hasTouch){
+      this.setVibStatus(false,'Komputer nie ma wibracji — przetestuj na telefonie.');
+    }else if(isAndroid){
+      this.setVibStatus(true,'Android wykryty — zaznacz opcję lub kliknij „Testuj wibracje”.');
+    }else{
+      this.setVibStatus(true,'Kliknij „Testuj wibracje”, aby sprawdzić.');
+    }
   }
 
   /* ====== DŹWIĘK (syntetyczny, bez plików) ====== */
   startAlarm(){
     try{
       const ctx=new(window.AudioContext||window.webkitAudioContext)();
+      if(ctx.state==='suspended')ctx.resume();
       const osc=ctx.createOscillator(),gain=ctx.createGain();
       osc.connect(gain); gain.connect(ctx.destination);
       const p=this.soundProfile;
@@ -483,33 +524,37 @@ class Czuwak{
     if(this.alarm.osc){try{this.alarm.osc.stop();}catch(e){}}
     if(this.alarm.ctx){try{this.alarm.ctx.close();}catch(e){}}
     this.alarm={ctx:null,osc:null,gain:null,pat:null};
-    if('vibrate'in navigator)navigator.vibrate(0);
+    this.stopVib();
   }
   previewSound(){
     try{
       const ctx=new(window.AudioContext||window.webkitAudioContext)();
+      if(ctx.state==='suspended')ctx.resume();
       const osc=ctx.createOscillator(),gain=ctx.createGain();
       osc.connect(gain);gain.connect(ctx.destination);
       const p=this.soundProfile;
       osc.type=p==='gentle'?'sine':'square';
       osc.frequency.value=p==='gentle'?440:p==='urgent'?900:700;
       gain.gain.value=p==='gentle'?.12:p==='urgent'?.3:.22;
-      osc.start(); setTimeout(()=>{osc.stop();ctx.close();},250);
+      osc.start(); setTimeout(()=>{try{osc.stop();ctx.close();}catch(e){}},250);
     }catch(e){}
   }
 
-  /* ====== GŁOS / WIBRACJE ====== */
+  /* ====== GŁOS ====== */
   speak(t){
     if(!this.voice||!('speechSynthesis'in window))return;
     try{const u=new SpeechSynthesisUtterance(t);u.lang='pl-PL';u.rate=1.1;
       speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}
   }
-  testVib(){if('vibrate'in navigator)navigator.vibrate([150,80,150]);}
-  detectVib(){
-    const ua=navigator.userAgent;
-    if(!('vibrate'in navigator)){$('vibChk').disabled=true;
-      $('capHint').textContent='Wibracje niedostępne w tej przeglądarce';}
-    else if(/iPad|iPhone|iPod/.test(ua))$('capHint').textContent='Uwaga: na iOS wibracje w przeglądarce mogą nie działać';
+
+  /* ====== WAKE LOCK (ekran nie gaśnie) ====== */
+  async wakeLock(){
+    try{
+      if('wakeLock'in navigator && document.visibilityState==='visible'){
+        this.wl=await navigator.wakeLock.request('screen');
+        this.wl.addEventListener('release',()=>{ this.wl=null; });
+      }
+    }catch(e){ /* brak HTTPS, brak wsparcia lub karta w tle */ }
   }
 
   /* ====== GPS ====== */
@@ -648,7 +693,6 @@ class Czuwak{
     if(this.sess.streak>t.streak)t.streak=this.sess.streak;
     const fast=this.sess.times.length?Math.min(...this.sess.times):0;
     if(fast&&(!t.best||fast<t.best))t.best=fast;
-    // odznaki zależne od sesji
     const dur=Date.now()-this.sess.start;
     if(dur>3600000)this.unlock('marathon');
     const hr=new Date().getHours();
@@ -729,7 +773,6 @@ class Czuwak{
 
   clearTimers(){['alert','count','next'].forEach(k=>{
     if(this.timers[k]){clearTimeout(this.timers[k]);clearInterval(this.timers[k]);this.timers[k]=null;}});}
-  async wakeLock(){try{if('wakeLock'in navigator)this.wl=await navigator.wakeLock.request('screen');}catch(e){}}
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
