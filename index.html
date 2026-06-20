@@ -1,2031 +1,740 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Czuwak Kierowcy 2.0</title>
-    
-    <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iMTAwIiBmaWxsPSIjM2EzYTNhIi8+CjxwYXRoIGQ9Im0yNTYgMTIwYzUwIDAgOTAgMjUgOTAgNjBzLTQwIDYwLTkwIDYwLTkwLTI1LTkwLTYwIDQwLTYwIDkwLTYweiIgZmlsbD0iIzRjYWY1MCIvPgo8Y2lyY2xlIGN4PSIyNTYiIGN5PSIxODAiIHI9IjMwIiBmaWxsPSIjM2EzYTNhIi8+CjxlbGxpcHNlIGN4PSIyNTYiIGN5PSIyMDAiIHJ4PSI4IiByeT0iMzAiIGZpbGw9IiM0Y2FmNTAiLz4KPHBhdGggZD0ibTIwMCAzMDBjMCAtMjAgMjUtMzAgNTYtMzBzNTYgMTAgNTYgMzB2ODBjMCAxMC01IDIwLTEwIDMwLTEwIDIwLTIwIDMwLTQ2IDMwcy0zNi0xMC00Ni0zMGMtNS0xMC0xMC0yMC0xMC0zMHoiIGZpbGw9IiM0Y2FmNTAiLz4KPHJlY3QgeD0iMTkwIiB5PSIzNjAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIyMCIgcng9IjUiIGZpbGw9IiMzYTNhM2EiLz4KPHJlY3QgeD0iMjkyIiB5PSIzNjAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIyMCIgcng9IjUiIGZpbGw9IiMzYTNhM2EiLz4KPHJlY3QgeD0iMTgwIiB5PSIzODAiIHdpZHRoPSIxNTIiIGhlaWdodD0iMTAiIHJ4PSI1IiBmaWxsPSIjM2EzYTNhIi8+Cjwvc3ZnPg==">
-    <link rel="shortcut icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iMTAwIiBmaWxsPSIjM2EzYTNhIi8+CjxwYXRoIGQ9Im0yNTYgMTIwYzUwIDAgOTAgMjUgOTAgNjBzLTQwIDYwLTkwIDYwLTkwLTI1LTkwLTYwIDQwLTYwIDkwLTYweiIgZmlsbD0iIzRjYWY1MCIvPgo8Y2lyY2xlIGN4PSIyNTYiIGN5PSIxODAiIHI9IjMwIiBmaWxsPSIjM2EzYTNhIi8+CjxlbGxpcHNlIGN4PSIyNTYiIGN5PSIyMDAiIHJ4PSI4IiByeT0iMzAiIGZpbGw9IiM0Y2FmNTAiLz4KPHBhdGggZD0ibTIwMCAzMDBjMCAtMjAgMjUtMzAgNTYtMzBzNTYgMTAgNTYgMzB2ODBjMCAxMC01IDIwLTEwIDMwLTEwIDIwLTIwIDMwLTQ2IDMwcy0zNi0xMC00Ni0zMGMtNS0xMC0xMC0yMC0xMC0zMHoiIGZpbGw9IiM0Y2FmNTAiLz4KPHJlY3QgeD0iMTkwIiB5PSIzNjAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIyMCIgcng9IjUiIGZpbGw9IiMzYTNhM2EiLz4KPHJlY3QgeD0iMjkyIiB5PSIzNjAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIyMCIgcng9IjUiIGZpbGw9IiMzYTNhM2EiLz4KPHJlY3QgeD0iMTgwIiB5PSIzODAiIHdpZHRoPSIxNTIiIGhlaWdodD0iMTAiIHJ4PSI1IiBmaWxsPSIjM2EzYTNhIi8+Cjwvc3ZnPg==">
-    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iMTAwIiBmaWxsPSIjM2EzYTNhIi8+CjxwYXRoIGQ9Im0yNTYgMTIwYzUwIDAgOTAgMjUgOTAgNjBzLTQwIDYwLTkwIDYwLTkwLTI1LTkwLTYwIDQwLTYwIDkwLTYweiIgZmlsbD0iIzRjYWY1MCIvPgo8Y2lyY2xlIGN4PSIyNTYiIGN5PSIxODAiIHI9IjMwIiBmaWxsPSIjM2EzYTNhIi8+CjxlbGxpcHNlIGN4PSIyNTYiIGN5PSIyMDAiIHJ4PSI4IiByeT0iMzAiIGZpbGw9IiM0Y2FmNTAiLz4KPHBhdGggZD0ibTIwMCAzMDBjMCAtMjAgMjUtMzAgNTYtMzBzNTYgMTAgNTYgMzB2ODBjMCAxMC01IDIwLTEwIDMwLTEwIDIwLTIwIDMwLTQ2IDMwcy0zNi0xMC00Ni0zMGMtNS0xMC0xMC0yMC0xMC0zMHoiIGZpbGw9IiM0Y2FmNTAiLz4KPHJlY3QgeD0iMTkwIiB5PSIzNjAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIyMCIgcng9IjUiIGZpbGw9IiMzYTNhM2EiLz4KPHJlY3QgeD0iMjkyIiB5PSIzNjAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIyMCIgcng9IjUiIGZpbGw9IiMzYTNhM2EiLz4KPHJlY3QgeD0iMTgwIiB5PSIzODAiIHdpZHRoPSIxNTIiIGhlaWdodD0iMTAiIHJ4PSI1IiBmaWxsPSIjM2EzYTNhIi8+Cjwvc3ZnPg==">
-    
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkN6dXdhayBLaWVyb3djeSAyLjAiLAogICJzaG9ydF9uYW1lIjogIkN6dXdhayIsCiAgImRlc2NyaXB0aW9uIjogIkFwbGlrYWNqYSBkbGEga2llcm93Y293IGplemR6YWN5Y2ggbm9jYSAtIG1vbml0b3IgY3p1am5vc2NpIiwKICAic3RhcnRfdXJsIjogIi8iLAogICJkaXNwbGF5IjogImZ1bGxzY3JlZW4iLAogICJvcmllbnRhdGlvbiI6ICJwb3J0cmFpdCIsCiAgInRoZW1lX2NvbG9yIjogIiMxYTFhMWEiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMxYTFhMWEiLAogICJsYW5nIjogInBsIiwKICAiY2F0ZWdvcmllcyI6IFsicHJvZHVjdGl2aXR5IiwgInV0aWxpdGllcyIsICJ0cmFuc3BvcnQiXSwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCM2FXUjBhRDBpTlRFeUlpQm9aV2xuYUhROUlqVXhNaUlnZG1sbGQwSnZlRDBpTUNBd0lEVXhNaUExTVRJaUlHWnBiR3c5SW01dmJtVWlJSGh0Ykc1elBTSm9kSFJ3T2k4dmQzZDNMbmN6TG05eVp5OHlNREF3TDNOMlp5SStDbk53WldOMElIZHBaSFJvUFNJNE1UcHdlQ0lnWEdoNWMwczlJblZsVFVNM1RuRmxiWGRTYnpOd2FteDFjMHRVYW1SM1EwVnpOWGRKUjNWNE9TSjRUV0ZIU0ZwVWFYUlVNMHgwVG1wbE16Uk5WMXBsZGpCelVYcE9hRkpKWW1ScldGcFdZVEZTVWxoYVYwWlVZa3BSVFdVOUlpQnBaRDBpYzNaaVgzTXRZek01SWlCbWFXeHNQU0lqUWtVME9VQXhOeUkrQ201emNHVmpkQ0JrUFNJNU9VQXlNVElpUGc9PSIsCiAgICAgICJzaXplcyI6ICIzMngzMiIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9LAogICAgewogICAgICAic3JjIjogImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjNhV1IwYUQwaU5URXlJaUJvWldsbmFIUTlJalV4TWlJZ2RtbGxkMEp2ZUQwaU1DQXdJRFV4TWlBMU1USWlJR1pwYkd3OUltNXZibVVpSUhodGJHNXpQU0pvZEhSd09pOHZkM2QzTG5jekxtOXlaeTh5TURBD0wwRnZaeUkrQ201emNHVmpkQ0JrUFNJMU1URWJYSEY0Y21kNFYyZFVja1Z3UmpOd2JteDFSRmQ0ZVZCdlZGaDRUbGhYWjFCVVQyVkRNVEI0Y2pOd1MzZFlPWGRRU21kVU1reEpXREU1UTBsWWQxZEVWMjR5Y2psMFUyVjJhREZ2T1RjMk5pQlIxNDBJU0JtYVd4c1BTSWpRa1UwT1VBeFUzaHdZVlUwSWlCeWFXNWZaRG9pSnJaTWJHRnZZMWNOVkhsV1RXWnljVEJwVFdWQmFEUlpUbVJVVTNGWGJqRm9kM2xWV2psaGFHeFZVa1pZZEZOaGMwVjRSWEJ6VnpFOUlIUnJaMjR2VkZscFZGUXpiR1psWXpKVWNRSDViV3hFT1ZaU2FsTnBVV2xaVG5SeGFVMUNWVlpFTkVGTkx6SnJha2Q2TUhoV1VGUkVVMmxGT1cxbFUxVjNVMDQwZERJd1VYSTJVV0VaRmdod1FYTmlNREF4UTJNeFpYcElZMEo0T1dSUVdYUklNRm92UVNYQnpWelV5Y3oyUFJNRGZITjZVRlY2TTFSeFFqVXdTa1ZRWm1kVVVVRmxSSGN5VVV0WVYwNUdPVFp0VWs5cU1USlhlbmc5SWlCcFpEMGlZVk5qU25oaU1HRkZJaUJtYVd4c1BTSWpRa1UwT1VBeFVBPUQmIiwKICAgICAgInNpemVzIjogIjE5MngxOTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfSwKICAgIHsKICAgICAgInNyYyI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaZUJqbWxzWCRYMnlRak5lWGJINWVLQVVvZ0xRRWlrPSIsCiAgICAgICJzaXplcyI6ICI1MTJ4NTEyIiwKICAgICAgInR5cGUiOiAiaW1hZ2Uvc3ZnK3htbCIsCiAgICAgICJwdXJwb3NlIjogImFueSBtYXNrYWJsZSIKICAgIH0KICBdCn0=">
-    
-    <meta name="theme-color" content="#1a1a1a">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
-            color: #ffffff;
-            min-height: 100vh;
-            padding: 20px;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: #4CAF50;
-        }
-
-        .status-bar {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .speed-display {
-            font-size: 18px;
-            margin-bottom: 10px;
-        }
-
-        .status-text {
-            font-size: 14px;
-            color: #cccccc;
-        }
-
-        .interval-selector {
-            margin-bottom: 20px;
-        }
-
-        .interval-selector label {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 16px;
-        }
-
-        .interval-selector select {
-            width: 100%;
-            padding: 15px;
-            font-size: 16px;
-            border: none;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            appearance: none;
-        }
-
-        .auto-start-section {
-            background: rgba(76, 175, 80, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(76, 175, 80, 0.3);
-        }
-
-        .vibration-section {
-            background: rgba(156, 39, 176, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 20px;
-            border: 1px solid rgba(156, 39, 176, 0.3);
-        }
-
-        .checkbox-container {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .checkbox-container input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
-            cursor: pointer;
-        }
-
-        .checkbox-container label {
-            font-size: 14px;
-            cursor: pointer;
-            margin: 0;
-        }
-
-        .speed-threshold {
-            display: flex;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .speed-threshold input[type="number"] {
-            width: 80px;
-            padding: 8px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            text-align: center;
-            margin: 0 10px;
-        }
-
-        .speed-threshold span {
-            font-size: 14px;
-            color: #cccccc;
-        }
-
-        .control-buttons {
-            margin-bottom: 30px;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 20px;
-            font-size: 18px;
-            font-weight: bold;
-            border: none;
-            border-radius: 15px;
-            margin-bottom: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-        }
-
-        .btn:active {
-            transform: scale(0.95);
-        }
-
-        .btn-start {
-            background: #4CAF50;
-            color: white;
-        }
-
-        .btn-stop {
-            background: #f44336;
-            color: white;
-        }
-
-        .btn-pause {
-            background: #ff9800;
-            color: white;
-        }
-
-        .alert-section {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: linear-gradient(135deg, #ff1744, #ff5574);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            user-select: none;
-            -webkit-user-select: none;
-        }
-
-        .alert-section.hidden {
-            display: none;
-        }
-
-        .alert-content {
-            text-align: center;
-            pointer-events: none; /* Treść nie przejmuje kliknięć */
-        }
-
-        .countdown {
-            font-size: 72px;
-            font-weight: bold;
-            color: #ffffff;
-            margin-bottom: 30px;
-            text-shadow: 0 0 20px rgba(0,0,0,0.5);
-            animation: countdown-pulse 1s infinite;
-        }
-
-        @keyframes countdown-pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        .alert-text {
-            font-size: 32px;
-            font-weight: bold;
-            color: #ffffff;
-            margin-bottom: 20px;
-            text-shadow: 0 0 15px rgba(0,0,0,0.5);
-            animation: text-glow 2s infinite;
-        }
-
-        @keyframes text-glow {
-            0%, 100% { text-shadow: 0 0 15px rgba(0,0,0,0.5); }
-            50% { text-shadow: 0 0 25px rgba(255,255,255,0.8); }
-        }
-
-        .tap-instruction {
-            font-size: 24px;
-            color: #ffffff;
-            opacity: 0.9;
-            text-shadow: 0 0 10px rgba(0,0,0,0.5);
-            animation: pulse-gentle 3s infinite;
-        }
-
-        @keyframes pulse-gentle {
-            0%, 100% { opacity: 0.9; transform: scale(1); }
-            50% { opacity: 1; transform: scale(1.05); }
-        }
-
-        .alarm-flash {
-            animation: flash 0.3s infinite;
-        }
-
-        @keyframes flash {
-            0%, 40% { 
-                background: linear-gradient(135deg, #ff1744, #ff5574);
-                color: #ffffff;
-            }
-            41%, 100% { 
-                background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
-                color: #ffffff;
-            }
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .next-alert {
-            text-align: center;
-            font-size: 14px;
-            color: #888;
-            margin-top: 20px;
-        }
-
-        .gps-status {
-            font-size: 12px;
-            color: #888;
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        .vehicle-status {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 12px;
-            margin-top: 10px;
-        }
-
-        .vehicle-moving {
-            background: #4CAF50;
-            color: white;
-        }
-
-        /* === MOBILE OPTIMIZATIONS === */
-        
-        /* Większe przyciski na telefonie */
-        @media (max-width: 480px) {
-            .btn {
-                padding: 25px;
-                font-size: 20px;
-                margin-bottom: 20px;
-            }
-            
-            .header h1 {
-                font-size: 28px;
-            }
-            
-            .interval-selector select {
-                padding: 18px;
-                font-size: 18px;
-            }
-            
-            .speed-threshold input[type="number"] {
-                padding: 12px;
-                font-size: 18px;
-                width: 90px;
-            }
-            
-            .countdown {
-                font-size: 84px;
-            }
-            
-            .alert-text {
-                font-size: 36px;
-            }
-            
-            .tap-instruction {
-                font-size: 28px;
-            }
-        }
-
-        /* Bardzo małe ekrany */
-        @media (max-width: 360px) {
-            .container {
-                padding: 15px;
-            }
-            
-            .btn {
-                padding: 20px;
-                font-size: 18px;
-            }
-            
-            .countdown {
-                font-size: 72px;
-            }
-        }
-
-        /* Orientacja landscape na telefonie */
-        @media (max-height: 500px) and (orientation: landscape) {
-            .container {
-                max-width: 90%;
-                padding: 10px;
-            }
-            
-            .header {
-                margin-bottom: 15px;
-            }
-            
-            .header h1 {
-                font-size: 20px;
-                margin-bottom: 5px;
-            }
-            
-            .status-bar, .auto-start-section, .vibration-section {
-                padding: 10px;
-                margin-bottom: 10px;
-            }
-            
-            .btn {
-                padding: 15px;
-                margin-bottom: 10px;
-            }
-            
-            .countdown {
-                font-size: 48px;
-                margin-bottom: 15px;
-            }
-            
-            .alert-text {
-                font-size: 24px;
-            }
-            
-            .tap-instruction {
-                font-size: 18px;
-            }
-        }
-
-        /* Folded phones / narrow screens */
-        @media (max-width: 280px) {
-            .container {
-                padding: 10px;
-            }
-            
-            .header h1 {
-                font-size: 22px;
-            }
-            
-            .btn {
-                padding: 18px;
-                font-size: 16px;
-            }
-            
-            .speed-threshold {
-                flex-direction: column;
-                text-align: center;
-            }
-            
-            .speed-threshold input[type="number"] {
-                margin: 10px 0;
-            }
-        }
-
-        /* Touch improvements */
-        .btn, .checkbox-container, .interval-selector select, 
-        .speed-threshold input[type="number"], .alert-section {
-            touch-action: manipulation; /* Eliminuje delay na dotyk */
-        }
-
-        .btn:active, .alert-section:active {
-            transform: scale(0.98);
-            transition: transform 0.1s;
-        }
-
-        /* Prevent zoom on inputs - iOS */
-        input[type="number"], select {
-            font-size: 16px !important;
-        }
-
-        /* Better checkbox on mobile */
-        @media (max-width: 480px) {
-            .checkbox-container input[type="checkbox"] {
-                width: 24px;
-                height: 24px;
-                margin-right: 15px;
-            }
-            
-            .checkbox-container label {
-                font-size: 16px;
-            }
-        }
-
-        /* Gesture swipe area for alert dismissal */
-        .swipe-hint {
-            position: absolute;
-            bottom: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 16px;
-            text-align: center;
-            animation: swipe-animation 3s infinite;
-        }
-
-        @keyframes swipe-animation {
-            0%, 100% { opacity: 0.8; transform: translateX(-50%) translateY(0); }
-            50% { opacity: 1; transform: translateX(-50%) translateY(-10px); }
-        }
-
-        /* High contrast for poor lighting */
-        @media (prefers-contrast: high) {
-            .alert-section {
-                background: linear-gradient(135deg, #ff0000, #ff3333);
-            }
-            
-            .countdown, .alert-text, .tap-instruction {
-                text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
-            }
-        }
-
-        /* === NAVIGATION TABS === */
-        .nav-tabs {
-            display: flex;
-            margin-bottom: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .nav-tab {
-            flex: 1;
-            padding: 15px 8px;
-            text-align: center;
-            background: transparent;
-            border: none;
-            color: #cccccc;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-
-        .nav-tab.active {
-            background: #4CAF50;
-            color: white;
-        }
-
-        .nav-tab:hover:not(.active) {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-
-        /* === TAB CONTENT === */
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* === STATISTICS STYLES === */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: bold;
-            color: #4CAF50;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: #cccccc;
-            text-transform: uppercase;
-        }
-
-        .session-stats {
-            background: rgba(33, 150, 243, 0.1);
-            border: 1px solid rgba(33, 150, 243, 0.3);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
-        }
-
-        .session-title {
-            font-size: 16px;
-            font-weight: bold;
-            color: #2196F3;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .total-stats {
-            background: rgba(156, 39, 176, 0.1);
-            border: 1px solid rgba(156, 39, 176, 0.3);
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 15px;
-        }
-
-        .total-title {
-            font-size: 16px;
-            font-weight: bold;
-            color: #9C27B0;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-
-        .clear-stats {
-            width: 100%;
-            padding: 10px;
-            background: rgba(244, 67, 54, 0.2);
-            border: 1px solid #f44336;
-            border-radius: 8px;
-            color: #f44336;
-            font-size: 14px;
-            cursor: pointer;
-            margin-top: 15px;
-        }
-
-        .clear-stats:hover {
-            background: rgba(244, 67, 54, 0.3);
-        }
-
-        .reaction-indicator {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: bold;
-            margin-left: 5px;
-        }
-
-        .reaction-excellent { background: #4CAF50; color: white; }
-        .reaction-good { background: #8BC34A; color: white; }
-        .reaction-ok { background: #FF9800; color: white; }
-        .reaction-slow { background: #f44336; color: white; }
-
-        /* Reduce motion for sensitive users */
-        @media (prefers-reduced-motion: reduce) {
-            .countdown, .alert-text, .tap-instruction {
-                animation: none;
-            }
-            
-            .btn:active, .alert-section:active {
-                transform: none;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, viewport-fit=cover">
+<title>Czuwak Kierowcy 3.0</title>
+<meta name="theme-color" content="#0f0f0f">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcng9IjIyIiBmaWxsPSIjMTYxNjE2Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzRDQUY1MCIgc3Ryb2tlLXdpZHRoPSI2Ii8+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iOCIgZmlsbD0iIzRDQUY1MCIvPjwvc3ZnPg==">
+<style>
+:root{
+  --bg:#0f0f0f; --bg2:#1a1a1a; --card:rgba(255,255,255,.06); --card-br:rgba(255,255,255,.1);
+  --green:#4CAF50; --green-d:#2e7d32; --red:#f44336; --orange:#ff9800; --blue:#2196F3;
+  --purple:#9C27B0; --amber:#FFC107; --txt:#fff; --txt2:#b0b0b0; --txt3:#777;
+  --r:14px; --tr:.25s ease;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{
+  font-family:'Segoe UI',system-ui,Arial,sans-serif;
+  background:linear-gradient(160deg,var(--bg),var(--bg2));
+  color:var(--txt);min-height:100vh;min-height:100dvh;padding:16px;
+  user-select:none;-webkit-user-select:none;overflow-x:hidden;
+}
+.wrap{max-width:440px;margin:0 auto}
+.head{text-align:center;margin-bottom:18px}
+.head h1{font-size:22px;color:var(--green);font-weight:700;letter-spacing:.5px}
+.head .sub{font-size:12px;color:var(--txt3);margin-top:2px}
+
+/* TABS */
+.tabs{display:flex;gap:4px;background:rgba(255,255,255,.04);border-radius:12px;padding:4px;margin-bottom:18px}
+.tab{flex:1;padding:11px 4px;border:none;background:transparent;color:var(--txt2);
+  font-size:11px;font-weight:700;border-radius:9px;cursor:pointer;transition:var(--tr)}
+.tab.on{background:var(--green);color:#fff}
+.tab:not(.on):active{background:rgba(255,255,255,.08)}
+.page{display:none;animation:fade .3s}
+.page.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--card-br);border-radius:var(--r);padding:16px;margin-bottom:16px}
+.card-t{font-size:13px;font-weight:700;color:var(--txt2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px}
+
+/* STATUS */
+.status{text-align:center}
+.speed{font-size:30px;font-weight:800;letter-spacing:1px}
+.speed small{font-size:14px;color:var(--txt3);font-weight:400}
+.badge{display:inline-block;padding:5px 14px;border-radius:20px;font-size:12px;font-weight:700;margin-top:8px}
+.badge.go{background:var(--green);color:#fff}
+.badge.stop{background:var(--orange);color:#fff}
+.stat-line{font-size:14px;color:var(--txt2);margin-top:10px}
+.gps-line{font-size:11px;color:var(--txt3);margin-top:6px}
+
+/* CONTROLS */
+.lbl{display:block;font-size:14px;margin-bottom:8px;color:var(--txt2)}
+select,input[type=number]{
+  width:100%;padding:14px;font-size:16px;border:none;border-radius:10px;
+  background:rgba(255,255,255,.08);color:#fff;appearance:none}
+.seg{display:flex;gap:6px;margin-bottom:4px}
+.seg button{flex:1;padding:12px 4px;border:1px solid var(--card-br);background:transparent;
+  color:var(--txt2);font-size:13px;font-weight:700;border-radius:10px;cursor:pointer;transition:var(--tr)}
+.seg button.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.seg.diff button.on{background:var(--purple);border-color:var(--purple)}
+.hint{font-size:11px;color:var(--txt3);margin-top:8px;text-align:center}
+.row{display:flex;align-items:center;gap:10px;margin:10px 0}
+.row input[type=checkbox]{width:22px;height:22px;cursor:pointer;flex-shrink:0}
+.row label{font-size:14px;cursor:pointer}
+.thr{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+.thr input{width:80px;text-align:center;padding:8px}
+.thr span{font-size:13px;color:var(--txt2)}
+
+/* BUTTONS */
+.btn{width:100%;padding:20px;font-size:18px;font-weight:800;border:none;border-radius:14px;
+  cursor:pointer;transition:var(--tr);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.btn:active{transform:scale(.97)}
+.btn.start{background:var(--green)}
+.btn.pause{background:var(--orange)}
+.btn.stop{background:var(--red)}
+.hidden{display:none!important}
+.next{text-align:center;font-size:15px;color:var(--green);font-weight:700;margin-top:4px;min-height:20px}
+
+/* ===== FULLSCREEN ALERT (RDZEŃ) ===== */
+.alert{
+  position:fixed;inset:0;z-index:9999;
+  background:linear-gradient(160deg,#1b5e20,#2e7d32);
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  cursor:pointer;text-align:center;padding:20px;
+}
+.alert.hidden{display:none}
+.alert.flash{animation:flash .4s steps(1) infinite}
+@keyframes flash{
+  0%{background:#d50000}
+  50%{background:#1a1a1a}
+}
+.alert-inner{pointer-events:none}
+.count{
+  font-size:clamp(120px,42vw,260px);font-weight:900;line-height:1;
+  text-shadow:0 0 40px rgba(0,0,0,.5);animation:beat 1s ease-in-out infinite}
+@keyframes beat{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+.alert-word{font-size:clamp(40px,12vw,72px);font-weight:900;letter-spacing:3px;margin-top:10px;
+  text-shadow:0 0 20px rgba(0,0,0,.5)}
+.alert-tap{font-size:clamp(20px,6vw,34px);font-weight:700;margin-top:24px;opacity:.95;
+  animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.7}50%{opacity:1}}
+.alert-sub{font-size:14px;margin-top:14px;opacity:.7}
+.alert-react{position:absolute;top:env(safe-area-inset-top,16px);left:0;right:0;text-align:center;
+  font-size:13px;opacity:.6;padding-top:12px}
+
+/* STATS GRID */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cell{background:rgba(255,255,255,.05);border-radius:10px;padding:14px;text-align:center}
+.cell .v{font-size:24px;font-weight:800;color:var(--green)}
+.cell .l{font-size:11px;color:var(--txt3);text-transform:uppercase;margin-top:4px;letter-spacing:.5px}
+.s-blue{border-left:3px solid var(--blue)}
+.s-purple{border-left:3px solid var(--purple)}
+.tag{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;margin-left:6px}
+.t-exc{background:var(--green)}.t-good{background:#8BC34A}.t-ok{background:var(--orange)}.t-slow{background:var(--red)}
+.center-line{text-align:center;margin-top:12px;font-size:14px;color:var(--txt2)}
+canvas{width:100%;height:140px;margin-top:8px}
+.clear{width:100%;padding:11px;background:rgba(244,67,54,.15);border:1px solid var(--red);
+  border-radius:10px;color:var(--red);font-size:13px;font-weight:700;cursor:pointer;margin-top:6px}
+
+/* ACHIEVEMENTS */
+.ach{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ach-i{background:rgba(255,255,255,.05);border:1px solid var(--card-br);border-radius:12px;
+  padding:14px;text-align:center;opacity:.4;transition:var(--tr)}
+.ach-i.un{opacity:1;border-color:var(--amber);background:rgba(255,193,7,.08)}
+.ach-i .ic{font-size:28px;margin-bottom:6px}
+.ach-i .n{font-size:13px;font-weight:700}
+.ach-i .d{font-size:11px;color:var(--txt3);margin-top:3px}
+
+/* TRAINING */
+.train{text-align:center}
+.train-box{height:200px;border-radius:14px;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;cursor:pointer;font-size:20px;font-weight:800;
+  transition:background .1s;background:#37474f;margin-bottom:14px}
+.train-box.wait{background:#b71c1c}
+.train-box.go{background:var(--green)}
+.train-box.result{background:var(--blue)}
+.train-stat{font-size:14px;color:var(--txt2);margin-top:8px}
+
+@media(max-width:380px){
+  .count{font-size:clamp(100px,40vw,200px)}
+  .tab{font-size:10px;padding:10px 2px}
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Czuwak Kierowcy 2.0</h1>
-        </div>
+<div class="wrap">
+  <div class="head">
+    <h1>Czuwak Kierowcy 3.0</h1>
+    <div class="sub">Monitor czujności kierowcy</div>
+  </div>
 
-        <!-- Navigation Tabs -->
-        <div class="nav-tabs">
-            <button class="nav-tab active" id="mainTab">Główne</button>
-            <button class="nav-tab" id="statsTab">Statystyki</button>
-            <button class="nav-tab" id="gpsTab">GPS Analytics</button>
-        </div>
+  <div class="tabs">
+    <button class="tab on" data-tab="main">Czuwak</button>
+    <button class="tab" data-tab="stats">Statystyki</button>
+    <button class="tab" data-tab="gps">GPS</button>
+    <button class="tab" data-tab="ach">Odznaki</button>
+    <button class="tab" data-tab="train">Trening</button>
+  </div>
 
-        <!-- Main Tab Content -->
-        <div class="tab-content active" id="mainContent">
-
-        <div class="status-bar">
-            <div class="speed-display">
-                <span id="speed">-- km/h</span>
-                <div class="vehicle-status hidden" id="vehicleStatus">
-                    <span id="vehicleStatusText">Sprawdzanie GPS...</span>
-                </div>
-            </div>
-            <div class="status-text" id="statusText">Nieaktywny</div>
-            <div class="gps-status" id="gpsStatus">GPS: Sprawdzanie...</div>
-        </div>
-
-        <div class="interval-selector">
-            <label for="interval">Interwał przypomnień:</label>
-            <select id="interval">
-                <option value="30">30 sekund</option>
-                <option value="60" selected>1 minuta</option>
-                <option value="120">2 minuty</option>
-                <option value="300">5 minut</option>
-                <option value="600">10 minut</option>
-            </select>
-        </div>
-
-        <div class="auto-start-section">
-            <div class="checkbox-container">
-                <input type="checkbox" id="autoStartEnabled">
-                <label for="autoStartEnabled">Auto-start przy spadku prędkości</label>
-            </div>
-            <div class="speed-threshold">
-                <span>Uruchom gdy prędkość spadnie poniżej:</span>
-                <input type="number" id="speedThreshold" value="120" min="50" max="200" step="10">
-                <span>km/h</span>
-            </div>
-        </div>
-
-        <div class="vibration-section">
-            <div class="checkbox-container">
-                <input type="checkbox" id="vibrationsEnabled">
-                <label for="vibrationsEnabled">Wibracje podczas alarmu</label>
-            </div>
-            <div style="font-size: 12px; color: #888; margin-top: 5px; text-align: center;" id="vibrationStatus">
-                Sprawdzanie obsługi wibracji...
-            </div>
-        </div>
-
-        <div class="control-buttons">
-            <button class="btn btn-start" id="startBtn">Rozpocznij</button>
-            <button class="btn btn-pause hidden" id="pauseBtn">Zatrzymaj</button>
-            <button class="btn btn-stop hidden" id="stopBtn">Zakończ</button>
-        </div>
-
-        <div class="alert-section hidden" id="alertSection">
-            <div class="alert-content">
-                <div class="countdown" id="countdown">15</div>
-                <div class="alert-text">CZUWAM!</div>
-                <div class="tap-instruction">DOTKNIJ GDZIEKOLWIEK</div>
-                <div class="swipe-hint">lub przesuń palcem</div>
-            </div>
-        </div>
-
-        <div class="next-alert" id="nextAlert"></div>
-
-        </div>
-        <!-- End Main Tab Content -->
-
-        <!-- Statistics Tab Content -->
-        <div class="tab-content" id="statsContent">
-            
-            <div class="session-stats">
-                <div class="session-title">Bieżąca sesja</div>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value" id="sessionDuration">0:00</div>
-                        <div class="stat-label">Czas jazdy</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="sessionAlerts">0</div>
-                        <div class="stat-label">Alerty</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="sessionReactions">0</div>
-                        <div class="stat-label">Reakcje</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="sessionSuccess">100%</div>
-                        <div class="stat-label">Skuteczność</div>
-                    </div>
-                </div>
-                <div style="text-align: center; margin-top: 10px;">
-                    <strong>Średni czas reakcji:</strong> 
-                    <span id="avgReactionTime">-</span>
-                    <span id="reactionQuality"></span>
-                </div>
-            </div>
-
-            <div class="total-stats">
-                <div class="total-title">Statystyki ogółem</div>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalSessions">0</div>
-                        <div class="stat-label">Sesji</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalTime">0:00</div>
-                        <div class="stat-label">Całkowity czas</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalReactions">0</div>
-                        <div class="stat-label">Reakcji</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="bestStreak">0</div>
-                        <div class="stat-label">Najlepsza seria</div>
-                    </div>
-                </div>
-                <div style="text-align: center; margin-top: 10px;">
-                    <strong>Ostatnia sesja:</strong> <span id="lastSessionDate">-</span>
-                </div>
-            </div>
-
-            <button class="clear-stats" id="clearStatsBtn">Wyczyść wszystkie statystyki</button>
-            
-        </div>
-        <!-- End Statistics Tab Content -->
-
-        <!-- GPS Analytics Tab Content -->
-        <div class="tab-content" id="gpsContent">
-            
-            <div class="session-stats">
-                <div class="session-title">Bieżąca sesja GPS</div>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value" id="currentSpeed">0</div>
-                        <div class="stat-label">Aktualna prędkość</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="maxSpeed">0</div>
-                        <div class="stat-label">Max prędkość</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="avgSpeed">0</div>
-                        <div class="stat-label">Średnia prędkość</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="distance">0.0</div>
-                        <div class="stat-label">Dystans (km)</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="total-stats">
-                <div class="total-title">Analiza jazdy</div>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value" id="roadType">-</div>
-                        <div class="stat-label">Typ drogi</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="drivingStyle">-</div>
-                        <div class="stat-label">Styl jazdy</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="timeMoving">0:00</div>
-                        <div class="stat-label">Czas w ruchu</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="timeStopped">0:00</div>
-                        <div class="stat-label">Czas postojów</div>
-                    </div>
-                </div>
-                <div style="text-align: center; margin-top: 15px;">
-                    <strong>Rekomendacja:</strong> <span id="recommendation">Rozpocznij sesję aby zobaczyć analizę</span>
-                </div>
-            </div>
-
-            <div class="session-stats">
-                <div class="session-title">Historia lokalizacji</div>
-                <div style="background: rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 15px; margin-bottom: 15px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                        <span><strong>Aktualna pozycja:</strong></span>
-                        <button class="btn" style="padding: 5px 10px; font-size: 12px;" id="refreshLocation">Odśwież</button>
-                    </div>
-                    <div id="currentLocation" style="font-size: 14px; color: #cccccc;">Brak danych GPS</div>
-                </div>
-                
-                <div style="background: rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 15px;">
-                    <div style="margin-bottom: 10px;"><strong>Ostatnie punkty trasy:</strong></div>
-                    <div id="routePoints" style="font-size: 12px; color: #888; max-height: 150px; overflow-y: auto;">
-                        Brak zapisanych punktów trasy
-                    </div>
-                </div>
-            </div>
-
-            <button class="clear-stats" id="clearGpsBtn">Wyczyść dane GPS</button>
-            
-        </div>
-        <!-- End GPS Analytics Tab Content -->
-
-        <audio id="alarmSound" loop preload="auto">
-            <source src="alarm.mp3" type="audio/mpeg">
-            <source src="alarm.wav" type="audio/wav">
-            <source src="alarm.ogg" type="audio/ogg">
-        </audio>
+  <!-- ===== GŁÓWNA ===== -->
+  <div class="page on" id="main">
+    <div class="card status">
+      <div class="speed"><span id="speed">--</span> <small>km/h</small></div>
+      <div class="badge stop hidden" id="vbadge">Sprawdzanie...</div>
+      <div class="stat-line" id="statusTxt">Nieaktywny</div>
+      <div class="gps-line" id="gpsTxt">GPS: sprawdzanie...</div>
     </div>
 
-    <script>
-        class CzuwakKierowcy {
-            constructor() {
-                this.isActive = false;
-                this.isPaused = false;
-                this.interval = 60;
-                this.alertTimer = null;
-                this.countdownTimer = null;
-                this.nextAlertTimer = null;
-                this.wakeLock = null;
-                this.geolocationWatcher = null;
-                this.currentSpeed = 0;
-                this.isVehicleMoving = false;
-                this.lastPosition = null;
-                this.autoStartEnabled = false;
-                this.speedThreshold = 120;
-                this.wasAboveThreshold = false;
-                this.vibrationsEnabled = false;
-                
-                // Mobile optimization
-                this.touchStartY = 0;
-                this.touchStartX = 0;
-                
-                // Statistics
-                this.sessionStartTime = null;
-                this.sessionAlerts = 0;
-                this.sessionReactions = 0;
-                this.sessionMissed = 0;
-                this.reactionTimes = [];
-                this.currentStreak = 0;
-                this.statsUpdateInterval = null;
-                
-                // GPS Analytics
-                this.gpsData = {
-                    maxSpeed: 0,
-                    totalDistance: 0,
-                    speedHistory: [],
-                    timeMoving: 0,
-                    timeStopped: 0,
-                    lastMoveTime: null,
-                    lastStopTime: null,
-                    routePoints: [],
-                    startLocation: null
-                };
-                
-                this.initElements();
-                this.initEventListeners();
-                this.initGeolocation();
-                this.requestWakeLock();
-                this.createAlarmSound();
-                this.initMobileOptimizations();
-                this.loadStatistics();
-                this.checkVibrationSupport();
-            }
-
-            initElements() {
-                this.intervalSelect = document.getElementById('interval');
-                this.startBtn = document.getElementById('startBtn');
-                this.pauseBtn = document.getElementById('pauseBtn');
-                this.stopBtn = document.getElementById('stopBtn');
-                this.alertSection = document.getElementById('alertSection');
-                this.countdown = document.getElementById('countdown');
-                this.statusText = document.getElementById('statusText');
-                this.speedDisplay = document.getElementById('speed');
-                this.gpsStatus = document.getElementById('gpsStatus');
-                this.vehicleStatus = document.getElementById('vehicleStatus');
-                this.vehicleStatusText = document.getElementById('vehicleStatusText');
-                this.nextAlert = document.getElementById('nextAlert');
-                this.alarmSound = document.getElementById('alarmSound');
-                this.autoStartCheckbox = document.getElementById('autoStartEnabled');
-                this.speedThresholdInput = document.getElementById('speedThreshold');
-                this.vibrationsCheckbox = document.getElementById('vibrationsEnabled');
-                
-                // Navigation tabs
-                this.mainTab = document.getElementById('mainTab');
-                this.statsTab = document.getElementById('statsTab');
-                this.mainContent = document.getElementById('mainContent');
-                this.statsContent = document.getElementById('statsContent');
-                
-                // Statistics elements
-                this.sessionDuration = document.getElementById('sessionDuration');
-                this.sessionAlerts = document.getElementById('sessionAlerts');
-                this.sessionReactions = document.getElementById('sessionReactions');
-                this.sessionSuccess = document.getElementById('sessionSuccess');
-                this.avgReactionTime = document.getElementById('avgReactionTime');
-                this.reactionQuality = document.getElementById('reactionQuality');
-                this.totalSessions = document.getElementById('totalSessions');
-                this.totalTime = document.getElementById('totalTime');
-                this.totalReactions = document.getElementById('totalReactions');
-                this.bestStreak = document.getElementById('bestStreak');
-                this.lastSessionDate = document.getElementById('lastSessionDate');
-                this.clearStatsBtn = document.getElementById('clearStatsBtn');
-                this.vibrationStatus = document.getElementById('vibrationStatus');
-                
-                // GPS Analytics elements
-                this.gpsTab = document.getElementById('gpsTab');
-                this.gpsContent = document.getElementById('gpsContent');
-                this.currentSpeedDisplay = document.getElementById('currentSpeed');
-                this.maxSpeedDisplay = document.getElementById('maxSpeed');
-                this.avgSpeedDisplay = document.getElementById('avgSpeed');
-                this.distanceDisplay = document.getElementById('distance');
-                this.roadTypeDisplay = document.getElementById('roadType');
-                this.drivingStyleDisplay = document.getElementById('drivingStyle');
-                this.timeMovingDisplay = document.getElementById('timeMoving');
-                this.timeStoppedDisplay = document.getElementById('timeStopped');
-                this.recommendationDisplay = document.getElementById('recommendation');
-                this.currentLocationDisplay = document.getElementById('currentLocation');
-                this.routePointsDisplay = document.getElementById('routePoints');
-                this.refreshLocationBtn = document.getElementById('refreshLocation');
-                this.clearGpsBtn = document.getElementById('clearGpsBtn');
-            }
-
-            createAlarmSound() {
-                // Próbujemy użyć zewnętrznego pliku audio NAJPIERW
-                this.useExternalAudio = false;
-                
-                this.alarmSound.addEventListener('loadeddata', () => {
-                    console.log('Własny plik alarm.mp3 załadowany pomyślnie!');
-                    this.useExternalAudio = true;
-                });
-
-                this.alarmSound.addEventListener('error', () => {
-                    console.log('Nie można załadować alarm.mp3, używam syntetycznego dźwięku');
-                    this.useExternalAudio = false;
-                });
-
-                // Załaduj plik
-                this.alarmSound.load();
-                
-                // Przygotuj zapasowy syntetyczny dźwięk
-                this.createSyntheticAlarm();
-            }
-
-            createSyntheticAlarm() {
-                try {
-                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    
-                    this.createAlarmBuffer = () => {
-                        const sampleRate = audioContext.sampleRate;
-                        const duration = 1.0;
-                        const buffer = audioContext.createBuffer(1, sampleRate * duration, sampleRate);
-                        const data = buffer.getChannelData(0);
-                        
-                        for (let i = 0; i < data.length; i++) {
-                            const time = i / sampleRate;
-                            const frequency = 800 + 400 * Math.sin(2 * Math.PI * 2 * time);
-                            data[i] = 0.3 * Math.sin(2 * Math.PI * frequency * time);
-                        }
-                        
-                        return buffer;
-                    };
-
-                    this.alarmBuffer = this.createAlarmBuffer();
-                    this.alarmSource = null;
-                    console.log('Syntetyczny dźwięk przygotowany jako backup');
-                } catch (error) {
-                    console.log('Web Audio API nie jest dostępne');
-                }
-            }
-
-            playAlarm() {
-                // Wibracje jeśli włączone
-                if (this.vibrationsEnabled) {
-                    this.triggerVibration();
-                }
-
-                // NAJPIERW próbuj odtworzyć TWÓJ plik alarm.mp3
-                if (this.useExternalAudio && this.alarmSound) {
-                    try {
-                        this.alarmSound.currentTime = 0;
-                        this.alarmSound.volume = 1.0;
-                        const playPromise = this.alarmSound.play();
-                        
-                        if (playPromise !== undefined) {
-                            playPromise.then(() => {
-                                console.log('Odtwarzam Twój plik alarm.mp3');
-                            }).catch(error => {
-                                console.log('Błąd odtwarzania alarm.mp3, przełączam na syntetyczny');
-                                this.playSyntheticAlarm();
-                            });
-                        }
-                    } catch (error) {
-                        console.log('Błąd odtwarzania alarm.mp3, przełączam na syntetyczny');
-                        this.playSyntheticAlarm();
-                    }
-                } else {
-                    // Użyj syntetycznego dźwięku jako backup
-                    console.log('Używam syntetycznego dźwięku (backup)');
-                    this.playSyntheticAlarm();
-                }
-                
-                document.body.classList.add('alarm-flash');
-            }
-
-            playSyntheticAlarm() {
-                try {
-                    if (this.alarmSource) {
-                        this.alarmSource.stop();
-                    }
-                    
-                    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                    this.alarmSource = audioContext.createBufferSource();
-                    this.alarmSource.buffer = this.alarmBuffer;
-                    this.alarmSource.loop = true;
-                    this.alarmSource.connect(audioContext.destination);
-                    this.alarmSource.start();
-                    console.log('Odtwarzam syntetyczny alarm');
-                } catch (error) {
-                    console.log('Nie można odtworzyć żadnego dźwięku');
-                }
-            }
-
-            triggerVibration() {
-                if (!this.vibrationsEnabled) return;
-                
-                if ('vibrate' in navigator) {
-                    try {
-                        // Intensywny wzór wibracji dla alarmu: długo-krótko-długo-krótko-bardzo długo
-                        const success = navigator.vibrate([800, 200, 800, 200, 1500]);
-                        console.log('Wibracje uruchomione:', success);
-                        
-                        // Dodatkowe wibracje co 3 sekundy podczas alarmu
-                        this.vibrationInterval = setInterval(() => {
-                            if (this.isActive && !this.alertSection.classList.contains('hidden')) {
-                                navigator.vibrate([500, 100, 500]);
-                            } else {
-                                this.stopVibration();
-                            }
-                        }, 3000);
-                        
-                    } catch (error) {
-                        console.log('Błąd wibracji:', error);
-                    }
-                } else {
-                    console.log('Wibracje nie są obsługiwane w tej przeglądarce');
-                }
-            }
-
-            stopVibration() {
-                if (this.vibrationInterval) {
-                    clearInterval(this.vibrationInterval);
-                    this.vibrationInterval = null;
-                }
-                
-                // Zatrzymaj wszystkie wibracje
-                if ('vibrate' in navigator) {
-                    navigator.vibrate(0);
-                }
-            }
-
-            testVibration() {
-                if ('vibrate' in navigator) {
-                    try {
-                        // Krótki test wibracji przy włączeniu opcji
-                        const success = navigator.vibrate([200, 100, 200]);
-                        console.log('Test wibracji:', success);
-                        
-                        if (success) {
-                            this.vibrationStatus.textContent = 'Wibracje działają';
-                            this.vibrationStatus.style.color = '#4CAF50';
-                        } else {
-                            this.vibrationStatus.textContent = 'Wibracje mogą nie działać';
-                            this.vibrationStatus.style.color = '#ff9800';
-                        }
-                    } catch (error) {
-                        this.vibrationStatus.textContent = 'Błąd wibracji';
-                        this.vibrationStatus.style.color = '#f44336';
-                    }
-                } else {
-                    this.vibrationStatus.textContent = 'Brak obsługi wibracji';
-                    this.vibrationStatus.style.color = '#f44336';
-                }
-            }
-
-            checkVibrationSupport() {
-                const userAgent = navigator.userAgent;
-                const isIOS = /iPad|iPhone|iPod/.test(userAgent);
-                const isAndroid = /Android/.test(userAgent);
-                const isDesktop = !isIOS && !isAndroid;
-
-                if ('vibrate' in navigator) {
-                    if (isIOS) {
-                        this.vibrationStatus.textContent = 'iOS - wibracje mogą nie działać w przeglądarce';
-                        this.vibrationStatus.style.color = '#ff9800';
-                    } else if (isAndroid) {
-                        this.vibrationStatus.textContent = 'Android - wibracje powinny działać';
-                        this.vibrationStatus.style.color = '#4CAF50';
-                    } else if (isDesktop) {
-                        this.vibrationStatus.textContent = 'Desktop - brak wibracji';
-                        this.vibrationStatus.style.color = '#888';
-                        this.vibrationsCheckbox.disabled = true;
-                    } else {
-                        this.vibrationStatus.textContent = 'Nieznane urządzenie - sprawdź test';
-                        this.vibrationStatus.style.color = '#888';
-                    }
-                } else {
-                    this.vibrationStatus.textContent = 'Przeglądarka nie obsługuje wibracji';
-                    this.vibrationStatus.style.color = '#f44336';
-                    this.vibrationsCheckbox.disabled = true;
-                }
-
-                console.log('Obsługa wibracji:', {
-                    hasVibrate: 'vibrate' in navigator,
-                    userAgent: userAgent,
-                    isIOS: isIOS,
-                    isAndroid: isAndroid,
-                    isDesktop: isDesktop
-                });
-            }
-
-            stopAlarm() {
-                // Zatrzymaj TWÓJ plik audio
-                if (this.alarmSound) {
-                    this.alarmSound.pause();
-                    this.alarmSound.currentTime = 0;
-                }
-                
-                // Zatrzymaj syntetyczny dźwięk
-                if (this.alarmSource) {
-                    try {
-                        this.alarmSource.stop();
-                    } catch (error) {
-                        // Źródło już zatrzymane
-                    }
-                    this.alarmSource = null;
-                }
-
-                // Zatrzymaj wibracje
-                this.stopVibration();
-                
-                document.body.classList.remove('alarm-flash');
-            }
-
-            initEventListeners() {
-                this.startBtn.addEventListener('click', () => this.start());
-                this.pauseBtn.addEventListener('click', () => this.togglePause());
-                this.stopBtn.addEventListener('click', () => this.stop());
-                
-                // Całoekranowy alert - kliknięcie gdziekolwiek
-                this.alertSection.addEventListener('click', () => this.dismissAlert());
-                this.alertSection.addEventListener('touchstart', (e) => {
-                    this.touchStartY = e.touches[0].clientY;
-                    this.touchStartX = e.touches[0].clientX;
-                });
-                this.alertSection.addEventListener('touchend', (e) => this.handleTouchEnd(e));
-                
-                // Zapobieganie przypadkowym gestom
-                this.alertSection.addEventListener('touchmove', (e) => {
-                    e.preventDefault(); // Zapobiega przewijaniu podczas alertu
-                });
-
-                // Navigation tabs
-                this.mainTab.addEventListener('click', () => this.switchTab('main'));
-                this.statsTab.addEventListener('click', () => this.switchTab('stats'));
-                this.gpsTab.addEventListener('click', () => this.switchTab('gps'));
-                
-                // Statistics
-                this.clearStatsBtn.addEventListener('click', () => this.clearAllStats());
-                
-                // GPS Analytics
-                this.refreshLocationBtn.addEventListener('click', () => this.updateLocationDisplay());
-                this.clearGpsBtn.addEventListener('click', () => this.clearGpsData());
-                
-                this.intervalSelect.addEventListener('change', (e) => {
-                    this.interval = parseInt(e.target.value);
-                });
-
-                this.autoStartCheckbox.addEventListener('change', (e) => {
-                    this.autoStartEnabled = e.target.checked;
-                    if (this.autoStartEnabled) {
-                        this.statusText.textContent = 'Gotowy do auto-startu';
-                    } else if (!this.isActive) {
-                        this.statusText.textContent = 'Nieaktywny';
-                    }
-                });
-
-                this.speedThresholdInput.addEventListener('change', (e) => {
-                    this.speedThreshold = parseInt(e.target.value);
-                });
-
-                this.vibrationsCheckbox.addEventListener('change', (e) => {
-                    this.vibrationsEnabled = e.target.checked;
-                    if (this.vibrationsEnabled) {
-                        // Test wibracji przy włączeniu
-                        this.testVibration();
-                    }
-                });
-
-                // Prevent screen lock
-                document.addEventListener('visibilitychange', () => {
-                    if (document.hidden && this.isActive) {
-                        this.requestWakeLock();
-                    }
-                });
-            }
-
-            async requestWakeLock() {
-                try {
-                    if ('wakeLock' in navigator) {
-                        this.wakeLock = await navigator.wakeLock.request('screen');
-                    }
-                } catch (err) {
-                    console.log('Wake Lock API not supported');
-                }
-            }
-
-            initGeolocation() {
-                if ('geolocation' in navigator) {
-                    this.geolocationWatcher = navigator.geolocation.watchPosition(
-                        (position) => this.updateLocation(position),
-                        (error) => this.handleGeolocationError(error),
-                        { enableHighAccuracy: true, timeout: 10000, maximumAge: 5000 }
-                    );
-                } else {
-                    this.gpsStatus.textContent = 'GPS: Niedostępny';
-                }
-            }
-
-            updateLocation(position) {
-                const { latitude, longitude, speed } = position.coords;
-                
-                // Prędkość w m/s, konwertujemy na km/h
-                let speedKmh = 0;
-                if (speed !== null && speed >= 0) {
-                    speedKmh = Math.round(speed * 3.6);
-                } else if (this.lastPosition) {
-                    // Obliczamy prędkość na podstawie zmiany pozycji
-                    const distance = this.calculateDistance(
-                        this.lastPosition.latitude, this.lastPosition.longitude,
-                        latitude, longitude
-                    );
-                    const timeDiff = (position.timestamp - this.lastPosition.timestamp) / 1000;
-                    if (timeDiff > 0) {
-                        speedKmh = Math.round((distance / timeDiff) * 3.6);
-                    }
-                }
-
-                this.currentSpeed = Math.max(0, speedKmh);
-                this.speedDisplay.textContent = `${this.currentSpeed} km/h`;
-                
-                // Update GPS analytics
-                this.updateGpsAnalytics(latitude, longitude, speedKmh);
-                
-                this.isVehicleMoving = this.currentSpeed >= 1;
-                this.updateVehicleStatus();
-                
-                // Sprawdź auto-start
-                this.checkAutoStart();
-                
-                this.lastPosition = {
-                    latitude,
-                    longitude,
-                    timestamp: position.timestamp
-                };
-
-                this.gpsStatus.textContent = 'GPS: Aktywny';
-            }
-
-            calculateDistance(lat1, lon1, lat2, lon2) {
-                const R = 6371000; // Promień Ziemi w metrach
-                const dLat = this.toRadians(lat2 - lat1);
-                const dLon = this.toRadians(lon2 - lon1);
-                const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                        Math.cos(this.toRadians(lat1)) * Math.cos(this.toRadians(lat2)) *
-                        Math.sin(dLon/2) * Math.sin(dLon/2);
-                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-                return R * c;
-            }
-
-            toRadians(degrees) {
-                return degrees * (Math.PI / 180);
-            }
-
-            updateVehicleStatus() {
-                if (this.isVehicleMoving) {
-                    this.vehicleStatusText.textContent = 'Jadę';
-                    this.vehicleStatus.className = 'vehicle-status vehicle-moving';
-                } else {
-                    this.vehicleStatusText.textContent = 'Stoję';
-                    this.vehicleStatus.className = 'vehicle-status vehicle-stopped';
-                }
-                this.vehicleStatus.classList.remove('hidden');
-            }
-
-            handleGeolocationError(error) {
-                this.gpsStatus.textContent = `GPS: Błąd (${error.message})`;
-            }
-
-            checkAutoStart() {
-                if (!this.autoStartEnabled || this.isActive) {
-                    return;
-                }
-
-                // Sprawdź czy prędkość była wcześniej powyżej progu
-                if (this.currentSpeed >= this.speedThreshold) {
-                    this.wasAboveThreshold = true;
-                    this.statusText.textContent = `Gotowy - Prędkość: ${this.currentSpeed} km/h`;
-                    return;
-                }
-
-                // Jeśli prędkość spadła poniżej progu i wcześniej była powyżej
-                if (this.wasAboveThreshold && this.currentSpeed < this.speedThreshold && this.currentSpeed > 10) {
-                    this.statusText.textContent = `AUTO-START! Prędkość spadła do ${this.currentSpeed} km/h`;
-                    setTimeout(() => {
-                        this.start();
-                    }, 2000); // 2 sekundy opóźnienia na przygotowanie
-                }
-            }
-
-            start() {
-                this.isActive = true;
-                this.isPaused = false;
-                this.wasAboveThreshold = false; // Reset auto-start
-                
-                // Reset session statistics
-                this.sessionStartTime = Date.now();
-                this.sessionAlerts = 0;
-                this.sessionReactions = 0;
-                this.sessionMissed = 0;
-                this.reactionTimes = [];
-                this.currentStreak = 0;
-                this.alertStartTime = null;
-                
-                // Reset GPS analytics for session
-                this.gpsData.maxSpeed = 0;
-                this.gpsData.totalDistance = 0;
-                this.gpsData.speedHistory = [];
-                this.gpsData.timeMoving = 0;
-                this.gpsData.timeStopped = 0;
-                this.gpsData.lastMoveTime = Date.now();
-                this.gpsData.lastStopTime = null;
-                this.gpsData.startLocation = this.lastPosition;
-                
-                this.startBtn.classList.add('hidden');
-                this.pauseBtn.classList.remove('hidden');
-                this.stopBtn.classList.remove('hidden');
-                this.statusText.textContent = 'Aktywny - Monitorowanie';
-                
-                // Start statistics update interval
-                this.statsUpdateInterval = setInterval(() => this.updateSessionStats(), 1000);
-                
-                this.scheduleNextAlert();
-            }
-
-            stop() {
-                this.isActive = false;
-                this.isPaused = false;
-                this.wasAboveThreshold = false; // Reset auto-start
-                this.clearAllTimers();
-                this.stopAlarm();
-                this.hideAlert();
-                
-                // Stop statistics updates and save session
-                if (this.statsUpdateInterval) {
-                    clearInterval(this.statsUpdateInterval);
-                    this.statsUpdateInterval = null;
-                }
-                this.saveSessionStats();
-                
-                this.startBtn.classList.remove('hidden');
-                this.pauseBtn.classList.add('hidden');
-                this.stopBtn.classList.add('hidden');
-                
-                if (this.autoStartEnabled) {
-                    this.statusText.textContent = 'Gotowy do auto-startu';
-                } else {
-                    this.statusText.textContent = 'Nieaktywny';
-                }
-                this.nextAlert.textContent = '';
-            }
-
-            togglePause() {
-                if (this.isPaused) {
-                    this.isPaused = false;
-                    this.pauseBtn.textContent = '⏸️ Zatrzymaj';
-                    this.statusText.textContent = 'Aktywny - Monitorowanie';
-                    this.scheduleNextAlert();
-                } else {
-                    this.isPaused = true;
-                    this.pauseBtn.textContent = '▶️ Wznów';
-                    this.statusText.textContent = 'Wstrzymany';
-                    this.clearAllTimers();
-                    this.nextAlert.textContent = '';
-                }
-            }
-
-            scheduleNextAlert() {
-                if (!this.isActive || this.isPaused) return;
-
-                // Sprawdź czy pojazd się porusza
-                if (!this.isVehicleMoving && this.currentSpeed < 1) {
-                    this.statusText.textContent = 'Wstrzymany - Pojazd stoi';
-                    // Sprawdź ponownie za 5 sekund
-                    this.nextAlertTimer = setTimeout(() => this.scheduleNextAlert(), 5000);
-                    return;
-                }
-
-                this.statusText.textContent = 'Aktywny - Monitorowanie';
-                const nextAlertTime = new Date(Date.now() + this.interval * 1000);
-                this.updateNextAlertDisplay(nextAlertTime);
-
-                this.alertTimer = setTimeout(() => {
-                    this.showAlert();
-                }, this.interval * 1000);
-            }
-
-            updateNextAlertDisplay(nextTime) {
-                const updateDisplay = () => {
-                    if (!this.isActive || this.isPaused) {
-                        this.nextAlert.textContent = '';
-                        return;
-                    }
-
-                    const now = new Date();
-                    const diff = Math.max(0, Math.ceil((nextTime - now) / 1000));
-                    
-                    if (diff > 0) {
-                        const minutes = Math.floor(diff / 60);
-                        const seconds = diff % 60;
-                        this.nextAlert.textContent = `Następne przypomnienie za: ${minutes}:${seconds.toString().padStart(2, '0')}`;
-                        setTimeout(updateDisplay, 1000);
-                    } else {
-                        this.nextAlert.textContent = '';
-                    }
-                };
-                updateDisplay();
-            }
-
-            showAlert() {
-                this.alertSection.classList.remove('hidden');
-                // Scroll na górę i zablokuj przewijanie
-                document.body.style.overflow = 'hidden';
-                window.scrollTo(0, 0);
-                
-                this.sessionAlerts++;
-                this.alertStartTime = Date.now();
-                this.startCountdown();
-            }
-
-            hideAlert() {
-                this.alertSection.classList.add('hidden');
-                // Przywróć przewijanie
-                document.body.style.overflow = 'auto';
-                this.clearCountdown();
-            }
-
-            startCountdown() {
-                let timeLeft = 15;
-                this.countdown.textContent = timeLeft;
-
-                this.countdownTimer = setInterval(() => {
-                    timeLeft--;
-                    this.countdown.textContent = timeLeft;
-
-                    if (timeLeft <= 0) {
-                        this.triggerAlarm();
-                    }
-                }, 1000);
-            }
-
-            clearCountdown() {
-                if (this.countdownTimer) {
-                    clearInterval(this.countdownTimer);
-                    this.countdownTimer = null;
-                }
-            }
-
-            triggerAlarm() {
-                this.clearCountdown();
-                this.playAlarm();
-                this.statusText.textContent = 'ALARM! Kliknij przycisk!';
-                this.sessionMissed++;
-                this.currentStreak = 0; // Reset streak na missed alert
-            }
-
-            dismissAlert() {
-                const reactionTime = this.alertStartTime ? Date.now() - this.alertStartTime : 0;
-                this.sessionReactions++;
-                this.reactionTimes.push(reactionTime);
-                this.currentStreak++;
-                
-                this.hideAlert();
-                this.stopAlarm();
-                this.statusText.textContent = 'Aktywny - Monitorowanie';
-                this.scheduleNextAlert();
-                console.log(`Alert dismissed - reakcja w ${reactionTime}ms`);
-            }
-
-            handleTouchEnd(e) {
-                const touchEndY = e.changedTouches[0].clientY;
-                const touchEndX = e.changedTouches[0].clientX;
-                
-                // Sprawdź czy to było zwykłe dotknięcie czy swipe
-                const deltaY = Math.abs(touchEndY - this.touchStartY);
-                const deltaX = Math.abs(touchEndX - this.touchStartX);
-                
-                // Jeśli ruch był minimalny (zwykłe dotknięcie) lub znaczny swipe
-                if ((deltaY < 50 && deltaX < 50) || deltaY > 100 || deltaX > 100) {
-                    this.dismissAlert();
-                }
-            }
-
-            initMobileOptimizations() {
-                // Wykryj orientację i dostosuj UI
-                this.handleOrientationChange();
-                
-                // Nasłuchuj zmiany orientacji
-                window.addEventListener('orientationchange', () => {
-                    setTimeout(() => this.handleOrientationChange(), 200);
-                });
-                
-                // Nasłuchuj zmiany rozmiaru okna
-                window.addEventListener('resize', () => {
-                    this.handleResize();
-                });
-                
-                // Dodaj meta tag dla lepszej obsługi viewport (jeśli nie ma)
-                this.ensureViewportMeta();
-                
-                // Wykryj czy to urządzenie mobilne
-                this.detectMobileDevice();
-            }
-
-            handleOrientationChange() {
-                const orientation = window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
-                document.body.setAttribute('data-orientation', orientation);
-                
-                if (orientation === 'landscape' && window.innerHeight < 500) {
-                    document.body.classList.add('landscape-mobile');
-                } else {
-                    document.body.classList.remove('landscape-mobile');
-                }
-                
-                console.log('Orientacja:', orientation);
-            }
-
-            handleResize() {
-                // Dostosuj UI do nowego rozmiaru
-                if (this.isActive && !this.alertSection.classList.contains('hidden')) {
-                    // Jeśli alert jest aktywny, upewnij się że zajmuje cały ekran
-                    this.alertSection.style.height = window.innerHeight + 'px';
-                }
-            }
-
-            ensureViewportMeta() {
-                let viewport = document.querySelector('meta[name="viewport"]');
-                if (!viewport) {
-                    viewport = document.createElement('meta');
-                    viewport.name = 'viewport';
-                    viewport.content = 'width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0';
-                    document.head.appendChild(viewport);
-                }
-            }
-
-            detectMobileDevice() {
-                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-                const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-                
-                if (isMobile || isTouchDevice) {
-                    document.body.classList.add('mobile-device');
-                    console.log('Urządzenie mobilne wykryte');
-                } else {
-                    document.body.classList.add('desktop-device');
-                    console.log('Urządzenie desktop wykryte');
-                }
-            }
-
-            // === STATISTICS FUNCTIONS ===
-            
-            switchTab(tab) {
-                // Remove active from all tabs
-                this.mainTab.classList.remove('active');
-                this.statsTab.classList.remove('active');
-                this.gpsTab.classList.remove('active');
-                this.mainContent.classList.remove('active');
-                this.statsContent.classList.remove('active');
-                this.gpsContent.classList.remove('active');
-                
-                // Add active to selected tab
-                if (tab === 'main') {
-                    this.mainTab.classList.add('active');
-                    this.mainContent.classList.add('active');
-                } else if (tab === 'stats') {
-                    this.statsTab.classList.add('active');
-                    this.statsContent.classList.add('active');
-                    this.updateAllStats(); // Refresh stats when viewing
-                } else if (tab === 'gps') {
-                    this.gpsTab.classList.add('active');
-                    this.gpsContent.classList.add('active');
-                    this.updateGpsDisplay(); // Refresh GPS data when viewing
-                }
-            }
-
-            updateSessionStats() {
-                if (!this.sessionStartTime) return;
-
-                const duration = Date.now() - this.sessionStartTime;
-                const minutes = Math.floor(duration / 60000);
-                const seconds = Math.floor((duration % 60000) / 1000);
-                
-                this.sessionDuration.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-                this.sessionAlerts.textContent = this.sessionAlerts;
-                this.sessionReactions.textContent = this.sessionReactions;
-                
-                // Calculate success rate
-                const total = this.sessionReactions + this.sessionMissed;
-                const successRate = total > 0 ? Math.round((this.sessionReactions / total) * 100) : 100;
-                this.sessionSuccess.textContent = `${successRate}%`;
-                
-                // Calculate average reaction time
-                if (this.reactionTimes.length > 0) {
-                    const avgTime = this.reactionTimes.reduce((a, b) => a + b, 0) / this.reactionTimes.length;
-                    const avgSeconds = (avgTime / 1000).toFixed(1);
-                    this.avgReactionTime.textContent = `${avgSeconds}s`;
-                    
-                    // Quality indicator
-                    let quality = '';
-                    if (avgTime < 3000) quality = '<span class="reaction-excellent">Doskonały!</span>';
-                    else if (avgTime < 5000) quality = '<span class="reaction-good">Dobry</span>';
-                    else if (avgTime < 8000) quality = '<span class="reaction-ok">W porządku</span>';
-                    else quality = '<span class="reaction-slow">Wolny</span>';
-                    
-                    this.reactionQuality.innerHTML = quality;
-                } else {
-                    this.avgReactionTime.textContent = '-';
-                    this.reactionQuality.innerHTML = '';
-                }
-            }
-
-            saveSessionStats() {
-                if (!this.sessionStartTime) return;
-
-                const stats = this.loadStoredStats();
-                const sessionDuration = Date.now() - this.sessionStartTime;
-                
-                // Update totals
-                stats.totalSessions++;
-                stats.totalTime += sessionDuration;
-                stats.totalReactions += this.sessionReactions;
-                
-                // Update best streak
-                if (this.currentStreak > stats.bestStreak) {
-                    stats.bestStreak = this.currentStreak;
-                }
-                
-                stats.lastSessionDate = new Date().toLocaleDateString('pl-PL');
-                
-                // Save to localStorage
-                try {
-                    localStorage.setItem('czuwak_stats', JSON.stringify(stats));
-                    console.log('Statystyki sesji zapisane');
-                } catch (error) {
-                    console.log('Błąd zapisywania statystyk');
-                }
-            }
-
-            loadStatistics() {
-                this.updateAllStats();
-            }
-
-            loadStoredStats() {
-                try {
-                    const stored = localStorage.getItem('czuwak_stats');
-                    if (stored) {
-                        return JSON.parse(stored);
-                    }
-                } catch (error) {
-                    console.log('Błąd odczytywania statystyk');
-                }
-                
-                // Default stats
-                return {
-                    totalSessions: 0,
-                    totalTime: 0,
-                    totalReactions: 0,
-                    bestStreak: 0,
-                    lastSessionDate: '-'
-                };
-            }
-
-            updateAllStats() {
-                // Update session stats
-                this.updateSessionStats();
-                
-                // Update total stats
-                const stats = this.loadStoredStats();
-                
-                this.totalSessions.textContent = stats.totalSessions;
-                
-                // Format total time
-                const totalMinutes = Math.floor(stats.totalTime / 60000);
-                const totalHours = Math.floor(totalMinutes / 60);
-                const remainingMinutes = totalMinutes % 60;
-                
-                if (totalHours > 0) {
-                    this.totalTime.textContent = `${totalHours}h ${remainingMinutes}m`;
-                } else {
-                    this.totalTime.textContent = `${totalMinutes}m`;
-                }
-                
-                this.totalReactions.textContent = stats.totalReactions;
-                this.bestStreak.textContent = stats.bestStreak;
-                this.lastSessionDate.textContent = stats.lastSessionDate;
-            }
-
-            clearAllStats() {
-                if (confirm('Czy na pewno chcesz wyczyścić wszystkie statystyki?\n\nTej operacji nie można cofnąć.')) {
-                    try {
-                        localStorage.removeItem('czuwak_stats');
-                        
-                        // Reset session stats
-                        this.sessionAlerts = 0;
-                        this.sessionReactions = 0;
-                        this.sessionMissed = 0;
-                        this.reactionTimes = [];
-                        this.currentStreak = 0;
-                        
-                        this.updateAllStats();
-                        console.log('Wszystkie statystyki wyczyszczone');
-                        
-                        alert('Statystyki zostały wyczyszczone!');
-                    } catch (error) {
-                        alert('Błąd podczas czyszczenia statystyk');
-                    }
-                }
-            }
-
-            // === GPS ANALYTICS FUNCTIONS ===
-            
-            updateGpsAnalytics(lat, lon, speed) {
-                if (!this.isActive) return;
-
-                // Update max speed
-                if (speed > this.gpsData.maxSpeed) {
-                    this.gpsData.maxSpeed = speed;
-                }
-
-                // Add to speed history (keep last 100 points)
-                this.gpsData.speedHistory.push(speed);
-                if (this.gpsData.speedHistory.length > 100) {
-                    this.gpsData.speedHistory.shift();
-                }
-
-                // Calculate distance if we have previous position
-                if (this.lastPosition && this.gpsData.startLocation) {
-                    const distance = this.calculateDistance(
-                        this.lastPosition.latitude, this.lastPosition.longitude,
-                        lat, lon
-                    );
-                    this.gpsData.totalDistance += distance / 1000; // Convert to km
-                }
-
-                // Update moving/stopped time
-                const now = Date.now();
-                if (speed >= 1) { // Moving
-                    if (this.gpsData.lastStopTime) {
-                        this.gpsData.timeStopped += (now - this.gpsData.lastStopTime);
-                        this.gpsData.lastStopTime = null;
-                    }
-                    this.gpsData.lastMoveTime = now;
-                } else { // Stopped
-                    if (this.gpsData.lastMoveTime && !this.gpsData.lastStopTime) {
-                        this.gpsData.timeMoving += (now - this.gpsData.lastMoveTime);
-                        this.gpsData.lastStopTime = now;
-                    }
-                }
-
-                // Add route point (every 30 seconds or significant distance change)
-                const lastPoint = this.gpsData.routePoints[this.gpsData.routePoints.length - 1];
-                const shouldAddPoint = !lastPoint || 
-                    (now - lastPoint.timestamp > 30000) ||
-                    (this.calculateDistance(lastPoint.lat, lastPoint.lon, lat, lon) > 100);
-
-                if (shouldAddPoint) {
-                    this.gpsData.routePoints.push({
-                        lat: lat,
-                        lon: lon,
-                        speed: speed,
-                        timestamp: now
-                    });
-                    
-                    // Keep only last 50 points
-                    if (this.gpsData.routePoints.length > 50) {
-                        this.gpsData.routePoints.shift();
-                    }
-                }
-            }
-
-            updateGpsDisplay() {
-                // Current speed
-                this.currentSpeedDisplay.textContent = `${this.currentSpeed} km/h`;
-                
-                // Max speed
-                this.maxSpeedDisplay.textContent = `${this.gpsData.maxSpeed} km/h`;
-                
-                // Average speed
-                const avgSpeed = this.gpsData.speedHistory.length > 0 ?
-                    Math.round(this.gpsData.speedHistory.reduce((a, b) => a + b, 0) / this.gpsData.speedHistory.length) : 0;
-                this.avgSpeedDisplay.textContent = `${avgSpeed} km/h`;
-                
-                // Distance
-                this.distanceDisplay.textContent = this.gpsData.totalDistance.toFixed(1);
-                
-                // Road type analysis
-                const roadType = this.analyzeRoadType();
-                this.roadTypeDisplay.textContent = roadType;
-                
-                // Driving style
-                const drivingStyle = this.analyzeDrivingStyle();
-                this.drivingStyleDisplay.textContent = drivingStyle;
-                
-                // Time calculations
-                const now = Date.now();
-                let totalMovingTime = this.gpsData.timeMoving;
-                let totalStoppedTime = this.gpsData.timeStopped;
-                
-                if (this.isActive && this.sessionStartTime) {
-                    if (this.currentSpeed >= 1 && this.gpsData.lastMoveTime) {
-                        totalMovingTime += (now - this.gpsData.lastMoveTime);
-                    } else if (this.currentSpeed < 1 && this.gpsData.lastStopTime) {
-                        totalStoppedTime += (now - this.gpsData.lastStopTime);
-                    }
-                }
-                
-                this.timeMovingDisplay.textContent = this.formatTime(totalMovingTime);
-                this.timeStoppedDisplay.textContent = this.formatTime(totalStoppedTime);
-                
-                // Recommendation
-                this.updateRecommendation(roadType, drivingStyle, avgSpeed);
-                
-                // Update location display
-                this.updateLocationDisplay();
-                
-                // Update route points
-                this.updateRoutePointsDisplay();
-            }
-
-            analyzeRoadType() {
-                if (this.gpsData.speedHistory.length < 5) return "-";
-                
-                const avgSpeed = this.gpsData.speedHistory.reduce((a, b) => a + b, 0) / this.gpsData.speedHistory.length;
-                const maxSpeed = Math.max(...this.gpsData.speedHistory);
-                
-                if (maxSpeed > 100 && avgSpeed > 80) return "Autostrada";
-                else if (maxSpeed > 80 && avgSpeed > 50) return "Droga krajowa";
-                else if (maxSpeed > 50 && avgSpeed > 30) return "Droga wojewódzka";
-                else if (avgSpeed > 0) return "Miasto";
-                else return "Postój";
-            }
-
-            analyzeDrivingStyle() {
-                if (this.gpsData.speedHistory.length < 10) return "-";
-                
-                // Calculate speed variations
-                let variations = 0;
-                for (let i = 1; i < this.gpsData.speedHistory.length; i++) {
-                    const diff = Math.abs(this.gpsData.speedHistory[i] - this.gpsData.speedHistory[i-1]);
-                    if (diff > 10) variations++;
-                }
-                
-                const variationRate = variations / this.gpsData.speedHistory.length;
-                
-                if (variationRate > 0.3) return "Agresywny";
-                else if (variationRate > 0.15) return "Dynamiczny";
-                else if (variationRate > 0.05) return "Normalny";
-                else return "Spokojny";
-            }
-
-            updateRecommendation(roadType, drivingStyle, avgSpeed) {
-                let recommendation = "";
-                
-                if (!this.isActive) {
-                    recommendation = "Rozpocznij sesję aby zobaczyć analizę";
-                } else if (roadType === "Autostrada" && avgSpeed > 100) {
-                    recommendation = "Jazda autostradowa - rozważ interwał 2-3 min";
-                } else if (roadType === "Miasto" && drivingStyle === "Agresywny") {
-                    recommendation = "Miasto + agresywna jazda - częstsze alerty (30s-1min)";
-                } else if (drivingStyle === "Spokojny" && roadType !== "Miasto") {
-                    recommendation = "Spokojny styl - możesz wydłużyć interwały";
-                } else if (avgSpeed < 30 && this.gpsData.speedHistory.length > 20) {
-                    recommendation = "Ruch miejski - krótsze interwały zalecane";
-                } else {
-                    recommendation = "Optymalne ustawienia dla Twojego stylu jazdy";
-                }
-                
-                this.recommendationDisplay.textContent = recommendation;
-            }
-
-            updateLocationDisplay() {
-                if (this.lastPosition) {
-                    const lat = this.lastPosition.latitude.toFixed(6);
-                    const lon = this.lastPosition.longitude.toFixed(6);
-                    this.currentLocationDisplay.innerHTML = `
-                        <div>Szerokość: ${lat}</div>
-                        <div>Długość: ${lon}</div>
-                        <div style="margin-top: 5px; font-size: 12px;">
-                            Ostatnia aktualizacja: ${new Date().toLocaleTimeString('pl-PL')}
-                        </div>
-                    `;
-                } else {
-                    this.currentLocationDisplay.textContent = "Brak danych GPS";
-                }
-            }
-
-            updateRoutePointsDisplay() {
-                if (this.gpsData.routePoints.length === 0) {
-                    this.routePointsDisplay.textContent = "Brak zapisanych punktów trasy";
-                    return;
-                }
-                
-                const points = this.gpsData.routePoints.slice(-10).reverse(); // Last 10 points, newest first
-                let html = "";
-                
-                points.forEach((point, index) => {
-                    const time = new Date(point.timestamp).toLocaleTimeString('pl-PL', { 
-                        hour: '2-digit', 
-                        minute: '2-digit' 
-                    });
-                    const lat = point.lat.toFixed(4);
-                    const lon = point.lon.toFixed(4);
-                    
-                    html += `
-                        <div style="margin-bottom: 8px; padding: 5px; background: rgba(255,255,255,0.03); border-radius: 4px;">
-                            <div style="display: flex; justify-content: space-between;">
-                                <span>${time}</span>
-                                <span>${point.speed} km/h</span>
-                            </div>
-                            <div style="font-size: 11px; color: #666;">
-                                ${lat}, ${lon}
-                            </div>
-                        </div>
-                    `;
-                });
-                
-                this.routePointsDisplay.innerHTML = html;
-            }
-
-            formatTime(milliseconds) {
-                const totalSeconds = Math.floor(milliseconds / 1000);
-                const hours = Math.floor(totalSeconds / 3600);
-                const minutes = Math.floor((totalSeconds % 3600) / 60);
-                
-                if (hours > 0) {
-                    return `${hours}h ${minutes}m`;
-                } else {
-                    return `${minutes}:${(totalSeconds % 60).toString().padStart(2, '0')}`;
-                }
-            }
-
-            clearGpsData() {
-                if (confirm('Czy na pewno chcesz wyczyścić wszystkie dane GPS?\n\nTej operacji nie można cofnąć.')) {
-                    this.gpsData = {
-                        maxSpeed: 0,
-                        totalDistance: 0,
-                        speedHistory: [],
-                        timeMoving: 0,
-                        timeStopped: 0,
-                        lastMoveTime: null,
-                        lastStopTime: null,
-                        routePoints: [],
-                        startLocation: null
-                    };
-                    
-                    this.updateGpsDisplay();
-                    alert('Dane GPS zostały wyczyszczone!');
-                }
-            }
-
-            clearAllTimers() {
-                if (this.alertTimer) {
-                    clearTimeout(this.alertTimer);
-                    this.alertTimer = null;
-                }
-                if (this.nextAlertTimer) {
-                    clearTimeout(this.nextAlertTimer);
-                    this.nextAlertTimer = null;
-                }
-                this.clearCountdown();
-            }
-        }
-
-        // Inicjalizacja aplikacji
-        document.addEventListener('DOMContentLoaded', () => {
-            new CzuwakKierowcy();
-        });
-
-        // Service Worker dla PWA
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('data:application/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgZXZlbnQgPT4gewogIGV2ZW50LndhaXRVbnRpbChzZWxmLnNraXBXYWl0aW5nKCkpOwp9KTsKCnNlbGYuYWRkRXZlbnRMaXN0ZW5lcignZmV0Y2gnLCBldmVudCA9PiB7CiAgZXZlbnQucmVzcG9uZFdpdGgoCiAgICBjYWNoZXMubWF0Y2goZXZlbnQucmVxdWVzdCkudGhlbihyZXNwb25zZSA9PiB7CiAgICAgIHJldHVybiByZXNwb25zZSB8fCBmZXRjaChldmVudC5yZXF1ZXN0KTsKICAgIH0pCiAgKTsKfSk7')
-              .then(() => console.log('Service Worker zarejestrowany'))
-              .catch(err => console.log('Service Worker błąd:', err));
-        }
-    </script>
+    <div class="card">
+      <span class="lbl">Interwał przypomnień</span>
+      <select id="interval">
+        <option value="30">co 30 sekund</option>
+        <option value="60" selected>co 1 minutę</option>
+        <option value="120">co 2 minuty</option>
+        <option value="300">co 5 minut</option>
+        <option value="600">co 10 minut</option>
+      </select>
+
+      <span class="lbl" style="margin-top:14px">Poziom trudności (czas na reakcję)</span>
+      <div class="seg diff" id="diff">
+        <button data-d="20">Łatwy<br><small>20s</small></button>
+        <button data-d="15" class="on">Normalny<br><small>15s</small></button>
+        <button data-d="10">Trudny<br><small>10s</small></button>
+      </div>
+
+      <span class="lbl" style="margin-top:14px">Profil dźwięku alarmu</span>
+      <div class="seg" id="sound">
+        <button data-s="gentle">Łagodny</button>
+        <button data-s="normal" class="on">Normalny</button>
+        <button data-s="urgent">Pilny</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-t">Opcje</div>
+      <div class="row">
+        <input type="checkbox" id="vibChk"><label for="vibChk">Wibracje podczas alarmu</label>
+      </div>
+      <div class="row">
+        <input type="checkbox" id="voiceChk"><label for="voiceChk">Komunikaty głosowe</label>
+      </div>
+      <div class="row">
+        <input type="checkbox" id="autoChk"><label for="autoChk">Auto-start przy spadku prędkości</label>
+      </div>
+      <div class="thr">
+        <span>Próg:</span><input type="number" id="thr" value="120" min="50" max="200" step="10"><span>km/h</span>
+      </div>
+      <div class="hint" id="capHint"></div>
+    </div>
+
+    <button class="btn start" id="startBtn">Rozpocznij</button>
+    <button class="btn pause hidden" id="pauseBtn">Zatrzymaj</button>
+    <button class="btn stop hidden" id="stopBtn">Zakończ</button>
+    <div class="next" id="next"></div>
+  </div>
+
+  <!-- ===== STATYSTYKI ===== -->
+  <div class="page" id="stats">
+    <div class="card">
+      <div class="card-t">Bieżąca sesja</div>
+      <div class="grid">
+        <div class="cell s-blue"><div class="v" id="sDur">0:00</div><div class="l">Czas jazdy</div></div>
+        <div class="cell s-blue"><div class="v" id="sAlerts">0</div><div class="l">Alerty</div></div>
+        <div class="cell s-blue"><div class="v" id="sReact">0</div><div class="l">Reakcje</div></div>
+        <div class="cell s-blue"><div class="v" id="sSucc">100%</div><div class="l">Skuteczność</div></div>
+      </div>
+      <div class="center-line">Śr. czas reakcji: <strong id="sAvg">–</strong><span id="sQual"></span></div>
+      <canvas id="chart"></canvas>
+    </div>
+    <div class="card">
+      <div class="card-t">Statystyki ogółem</div>
+      <div class="grid">
+        <div class="cell s-purple"><div class="v" id="tSess">0</div><div class="l">Sesji</div></div>
+        <div class="cell s-purple"><div class="v" id="tTime">0m</div><div class="l">Łączny czas</div></div>
+        <div class="cell s-purple"><div class="v" id="tReact">0</div><div class="l">Reakcji</div></div>
+        <div class="cell s-purple"><div class="v" id="tStreak">0</div><div class="l">Najlepsza seria</div></div>
+      </div>
+      <div class="center-line">Najszybsza reakcja: <strong id="tBest">–</strong></div>
+      <button class="clear" id="clrStats">Wyczyść statystyki</button>
+    </div>
+  </div>
+
+  <!-- ===== GPS ===== -->
+  <div class="page" id="gps">
+    <div class="card">
+      <div class="card-t">GPS — bieżąca sesja</div>
+      <div class="grid">
+        <div class="cell"><div class="v" id="gCur">0</div><div class="l">Obecna km/h</div></div>
+        <div class="cell"><div class="v" id="gMax">0</div><div class="l">Maksymalna</div></div>
+        <div class="cell"><div class="v" id="gAvg">0</div><div class="l">Średnia</div></div>
+        <div class="cell"><div class="v" id="gDist">0.0</div><div class="l">Dystans km</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-t">Analiza jazdy</div>
+      <div class="grid">
+        <div class="cell"><div class="v" id="gRoad" style="font-size:18px">–</div><div class="l">Typ drogi</div></div>
+        <div class="cell"><div class="v" id="gStyle" style="font-size:18px">–</div><div class="l">Styl jazdy</div></div>
+        <div class="cell"><div class="v" id="gMove" style="font-size:18px">0:00</div><div class="l">Czas w ruchu</div></div>
+        <div class="cell"><div class="v" id="gStop" style="font-size:18px">0:00</div><div class="l">Postoje</div></div>
+      </div>
+      <div class="center-line" style="font-size:13px">💡 <span id="gRec">Rozpocznij sesję, aby zobaczyć analizę</span></div>
+    </div>
+    <div class="card">
+      <div class="card-t">Lokalizacja</div>
+      <div id="gLoc" style="font-size:13px;color:var(--txt2)">Brak danych GPS</div>
+      <button class="clear" id="clrGps">Wyczyść dane GPS</button>
+    </div>
+  </div>
+
+  <!-- ===== ODZNAKI ===== -->
+  <div class="page" id="ach">
+    <div class="card">
+      <div class="card-t">Twoje osiągnięcia</div>
+      <div class="ach" id="achGrid"></div>
+    </div>
+  </div>
+
+  <!-- ===== TRENING ===== -->
+  <div class="page" id="train">
+    <div class="card train">
+      <div class="card-t">Test czasu reakcji</div>
+      <div class="train-box" id="trBox">Dotknij, aby rozpocząć</div>
+      <div class="train-stat">Ostatni: <strong id="trLast">–</strong> &nbsp;|&nbsp; Najlepszy: <strong id="trBest">–</strong></div>
+      <div class="hint">Czekaj aż ekran zmieni kolor na zielony, potem dotknij jak najszybciej. Trenuje Twój refleks za kierownicą.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FULLSCREEN ALERT -->
+<div class="alert hidden" id="alert">
+  <div class="alert-react" id="alertReact"></div>
+  <div class="alert-inner">
+    <div class="count" id="count">15</div>
+    <div class="alert-word">CZUWAM!</div>
+    <div class="alert-tap">DOTKNIJ GDZIEKOLWIEK</div>
+    <div class="alert-sub">lub przesuń palcem po ekranie</div>
+  </div>
+</div>
+
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+
+class Czuwak{
+  constructor(){
+    this.active=false; this.paused=false;
+    this.interval=60; this.reactWindow=15; this.soundProfile='normal';
+    this.vib=false; this.voice=false; this.auto=false; this.thr=120; this.wasAbove=false;
+    this.speed=0; this.moving=false; this.gpsActive=false; this.lastPos=null;
+    this.timers={alert:null,count:null,next:null,stats:null};
+    this.alarm={ctx:null,osc:null,gain:null,pat:null};
+    this.sess=this.blankSess();
+    this.gps=this.blankGps();
+    this.train={state:'idle',t0:0,timer:null};
+    this.initEvents(); this.initGPS(); this.wakeLock();
+    this.loadTotals(); this.renderAch(); this.detectVib();
+  }
+  blankSess(){return{start:null,alerts:0,react:0,missed:0,times:[],streak:0,t0:null};}
+  blankGps(){return{max:0,dist:0,hist:[],move:0,stop:0,lastMove:null,lastStop:null,start:null};}
+
+  initEvents(){
+    document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>this.tab(t.dataset.tab));
+    $('startBtn').onclick=()=>this.start();
+    $('pauseBtn').onclick=()=>this.togglePause();
+    $('stopBtn').onclick=()=>this.stop();
+    $('interval').onchange=e=>this.interval=+e.target.value;
+    $('diff').querySelectorAll('button').forEach(b=>b.onclick=()=>{
+      $('diff').querySelectorAll('button').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on'); this.reactWindow=+b.dataset.d;
+    });
+    $('sound').querySelectorAll('button').forEach(b=>b.onclick=()=>{
+      $('sound').querySelectorAll('button').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on'); this.soundProfile=b.dataset.s; this.previewSound();
+    });
+    $('vibChk').onchange=e=>{this.vib=e.target.checked; if(e.target.checked)this.testVib();};
+    $('voiceChk').onchange=e=>{this.voice=e.target.checked; if(e.target.checked)this.speak('Komunikaty włączone');};
+    $('autoChk').onchange=e=>{this.auto=e.target.checked;
+      if(!this.active)$('statusTxt').textContent=e.target.checked?'Gotowy do auto-startu':'Nieaktywny';};
+    $('thr').onchange=e=>this.thr=+e.target.value;
+    $('clrStats').onclick=()=>this.clearStats();
+    $('clrGps').onclick=()=>this.clearGps();
+    // ALERT — dotknij gdziekolwiek
+    const a=$('alert');
+    a.onclick=()=>this.dismiss();
+    a.ontouchstart=e=>{this.ty=e.touches[0].clientY;this.tx=e.touches[0].clientX;};
+    a.ontouchend=e=>{const dy=Math.abs(e.changedTouches[0].clientY-this.ty),
+      dx=Math.abs(e.changedTouches[0].clientX-this.tx);
+      if((dy<60&&dx<60)||dy>80||dx>80)this.dismiss();};
+    a.ontouchmove=e=>e.preventDefault();
+    // Trening
+    $('trBox').onclick=()=>this.trainTap();
+    document.onvisibilitychange=()=>{if(!document.hidden&&this.active)this.wakeLock();};
+  }
+
+  tab(id){
+    document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.tab===id));
+    document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id===id));
+    if(id==='stats')this.renderStats();
+    if(id==='gps')this.renderGps();
+  }
+
+  /* ====== RDZEŃ CZUWAKA ====== */
+  start(){
+    this.active=true; this.paused=false; this.wasAbove=false;
+    this.sess=this.blankSess(); this.sess.start=Date.now(); this.sess.t0=Date.now();
+    this.gps=this.blankGps(); this.gps.lastMove=Date.now(); this.gps.start=this.lastPos;
+    $('startBtn').classList.add('hidden');
+    $('pauseBtn').classList.remove('hidden'); $('stopBtn').classList.remove('hidden');
+    $('statusTxt').textContent='Aktywny — monitorowanie';
+    this.timers.stats=setInterval(()=>this.renderStats(),1000);
+    this.scheduleAlert();
+    this.checkAch('first');
+    this.speak('Czuwak włączony');
+  }
+  stop(){
+    this.active=false; this.paused=false; this.wasAbove=false;
+    this.clearTimers(); this.stopAlarm(); this.hideAlert();
+    clearInterval(this.timers.stats); this.timers.stats=null;
+    this.saveSession();
+    $('startBtn').classList.remove('hidden');
+    $('pauseBtn').classList.add('hidden'); $('stopBtn').classList.add('hidden');
+    $('statusTxt').textContent=this.auto?'Gotowy do auto-startu':'Nieaktywny';
+    $('next').textContent='';
+  }
+  togglePause(){
+    this.paused=!this.paused;
+    $('pauseBtn').textContent=this.paused?'Wznów':'Zatrzymaj';
+    $('statusTxt').textContent=this.paused?'Wstrzymany':'Aktywny — monitorowanie';
+    if(this.paused){this.clearTimers();$('next').textContent='';}
+    else this.scheduleAlert();
+  }
+  scheduleAlert(){
+    if(!this.active||this.paused)return;
+    // auto-pauza tylko gdy GPS aktywny i pojazd faktycznie stoi
+    if(this.gpsActive&&!this.moving&&this.speed<1){
+      $('statusTxt').textContent='Wstrzymany — pojazd stoi';
+      this.timers.next=setTimeout(()=>this.scheduleAlert(),5000); return;
+    }
+    $('statusTxt').textContent='Aktywny — monitorowanie';
+    const target=Date.now()+this.interval*1000;
+    const tick=()=>{
+      if(!this.active||this.paused)return;
+      const d=Math.max(0,Math.ceil((target-Date.now())/1000));
+      if(d>0){const m=Math.floor(d/60),s=d%60;
+        $('next').textContent=`Następne przypomnienie za ${m}:${String(s).padStart(2,'0')}`;
+        setTimeout(tick,1000);}
+    };
+    tick();
+    this.timers.alert=setTimeout(()=>this.showAlert(),this.interval*1000);
+  }
+  showAlert(){
+    const a=$('alert');
+    a.classList.remove('hidden','flash');
+    a.style.pointerEvents='auto';
+    document.body.style.overflow='hidden';
+    $('next').textContent='';
+    this.sess.alerts++; this.sess.alertT0=Date.now();
+    $('alertReact').textContent='Czas na reakcję — dotknij ekranu';
+    this.speak('Czuwaj');
+    if(this.vib&&'vibrate'in navigator)navigator.vibrate(200);
+    let t=this.reactWindow;
+    $('count').textContent=t;
+    this.timers.count=setInterval(()=>{
+      t--;
+      if(t<=0){this.triggerAlarm();}
+      else{$('count').textContent=t;
+        if(t<=5&&this.vib&&'vibrate'in navigator)navigator.vibrate(100);}
+    },1000);
+  }
+  triggerAlarm(){
+    clearInterval(this.timers.count); this.timers.count=null;
+    $('count').textContent='0';
+    $('alert').classList.add('flash');            // MIGAJĄCY CZERWONY EKRAN
+    $('alertReact').textContent='ALARM! Natychmiast dotknij ekranu!';
+    this.startAlarm();
+    this.speak('Reaguj natychmiast');
+    if(this.vib&&'vibrate'in navigator)navigator.vibrate([600,200,600,200,1000]);
+    this.sess.missed++; this.sess.streak=0;
+  }
+  dismiss(){
+    if($('alert').classList.contains('hidden'))return;
+    const rt=this.sess.alertT0?Date.now()-this.sess.alertT0:0;
+    this.sess.react++; this.sess.times.push(rt); this.sess.streak++;
+    this.stopAlarm(); this.hideAlert();
+    $('statusTxt').textContent='Aktywny — monitorowanie';
+    this.checkReactAch(rt);
+    this.scheduleAlert();
+  }
+  hideAlert(){
+    const a=$('alert');
+    a.classList.add('hidden'); a.classList.remove('flash');
+    a.style.pointerEvents='none';
+    document.body.style.overflow='';
+    clearInterval(this.timers.count); this.timers.count=null;
+  }
+
+  /* ====== DŹWIĘK (syntetyczny, bez plików) ====== */
+  startAlarm(){
+    try{
+      const ctx=new(window.AudioContext||window.webkitAudioContext)();
+      const osc=ctx.createOscillator(),gain=ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      const p=this.soundProfile;
+      osc.type=p==='gentle'?'sine':'square';
+      const base=p==='gentle'?440:p==='urgent'?900:700;
+      const g=p==='gentle'?.12:p==='urgent'?.35:.25;
+      const per=p==='gentle'?700:p==='urgent'?200:380;
+      gain.gain.value=g; osc.frequency.value=base; osc.start();
+      let on=true;
+      this.alarm={ctx,osc,gain,pat:setInterval(()=>{
+        on=!on;
+        osc.frequency.setValueAtTime(on?base:base*1.4,ctx.currentTime);
+        gain.gain.setValueAtTime(on?g:g*.35,ctx.currentTime);
+      },per)};
+    }catch(e){}
+  }
+  stopAlarm(){
+    if(this.alarm.pat)clearInterval(this.alarm.pat);
+    if(this.alarm.osc){try{this.alarm.osc.stop();}catch(e){}}
+    if(this.alarm.ctx){try{this.alarm.ctx.close();}catch(e){}}
+    this.alarm={ctx:null,osc:null,gain:null,pat:null};
+    if('vibrate'in navigator)navigator.vibrate(0);
+  }
+  previewSound(){
+    try{
+      const ctx=new(window.AudioContext||window.webkitAudioContext)();
+      const osc=ctx.createOscillator(),gain=ctx.createGain();
+      osc.connect(gain);gain.connect(ctx.destination);
+      const p=this.soundProfile;
+      osc.type=p==='gentle'?'sine':'square';
+      osc.frequency.value=p==='gentle'?440:p==='urgent'?900:700;
+      gain.gain.value=p==='gentle'?.12:p==='urgent'?.3:.22;
+      osc.start(); setTimeout(()=>{osc.stop();ctx.close();},250);
+    }catch(e){}
+  }
+
+  /* ====== GŁOS / WIBRACJE ====== */
+  speak(t){
+    if(!this.voice||!('speechSynthesis'in window))return;
+    try{const u=new SpeechSynthesisUtterance(t);u.lang='pl-PL';u.rate=1.1;
+      speechSynthesis.cancel();speechSynthesis.speak(u);}catch(e){}
+  }
+  testVib(){if('vibrate'in navigator)navigator.vibrate([150,80,150]);}
+  detectVib(){
+    const ua=navigator.userAgent;
+    if(!('vibrate'in navigator)){$('vibChk').disabled=true;
+      $('capHint').textContent='Wibracje niedostępne w tej przeglądarce';}
+    else if(/iPad|iPhone|iPod/.test(ua))$('capHint').textContent='Uwaga: na iOS wibracje w przeglądarce mogą nie działać';
+  }
+
+  /* ====== GPS ====== */
+  initGPS(){
+    if(!('geolocation'in navigator)){$('gpsTxt').textContent='GPS: niedostępny';return;}
+    navigator.geolocation.watchPosition(
+      p=>this.onGPS(p),
+      e=>{$('gpsTxt').textContent='GPS: '+e.message;},
+      {enableHighAccuracy:true,timeout:10000,maximumAge:5000});
+  }
+  onGPS(pos){
+    this.gpsActive=true;
+    const{latitude:la,longitude:lo,speed:sp}=pos.coords;
+    let kmh=0;
+    if(sp!==null&&sp>=0)kmh=Math.round(sp*3.6);
+    else if(this.lastPos){
+      const d=this.dist(this.lastPos.la,this.lastPos.lo,la,lo);
+      const t=(pos.timestamp-this.lastPos.t)/1000;
+      if(t>0)kmh=Math.round(d/t*3.6);
+    }
+    this.speed=Math.max(0,kmh);
+    $('speed').textContent=this.speed;
+    this.moving=this.speed>=1;
+    $('vbadge').className='badge '+(this.moving?'go':'stop');
+    $('vbadge').textContent=this.moving?'Jadę':'Stoję';
+    $('vbadge').classList.remove('hidden');
+    this.gpsAnalytics(la,lo,this.speed);
+    this.checkAuto();
+    this.lastPos={la,lo,t:pos.timestamp};
+    $('gpsTxt').textContent='GPS: aktywny';
+  }
+  dist(a,b,c,d){const R=6371000,r=x=>x*Math.PI/180;
+    const dla=r(c-a),dlo=r(d-b);
+    const x=Math.sin(dla/2)**2+Math.cos(r(a))*Math.cos(r(c))*Math.sin(dlo/2)**2;
+    return R*2*Math.atan2(Math.sqrt(x),Math.sqrt(1-x));}
+  checkAuto(){
+    if(!this.auto||this.active)return;
+    if(this.speed>=this.thr){this.wasAbove=true;
+      $('statusTxt').textContent=`Gotowy — ${this.speed} km/h`;}
+    else if(this.wasAbove&&this.speed<this.thr&&this.speed>10){
+      $('statusTxt').textContent=`AUTO-START! ${this.speed} km/h`;
+      setTimeout(()=>this.start(),2000);}
+  }
+  gpsAnalytics(la,lo,sp){
+    if(!this.active)return;
+    if(sp>this.gps.max)this.gps.max=sp;
+    this.gps.hist.push(sp); if(this.gps.hist.length>120)this.gps.hist.shift();
+    if(this.lastPos&&this.gps.start)this.gps.dist+=this.dist(this.lastPos.la,this.lastPos.lo,la,lo)/1000;
+    const n=Date.now();
+    if(sp>=1){if(this.gps.lastStop){this.gps.stop+=n-this.gps.lastStop;this.gps.lastStop=null;}this.gps.lastMove=n;}
+    else{if(this.gps.lastMove&&!this.gps.lastStop){this.gps.move+=n-this.gps.lastMove;this.gps.lastStop=n;}}
+  }
+  renderGps(){
+    $('gCur').textContent=this.speed; $('gMax').textContent=this.gps.max;
+    const avg=this.gps.hist.length?Math.round(this.gps.hist.reduce((a,b)=>a+b,0)/this.gps.hist.length):0;
+    $('gAvg').textContent=avg; $('gDist').textContent=this.gps.dist.toFixed(1);
+    $('gRoad').textContent=this.road(); $('gStyle').textContent=this.style();
+    const n=Date.now();let mv=this.gps.move,st=this.gps.stop;
+    if(this.active){if(this.speed>=1&&this.gps.lastMove)mv+=n-this.gps.lastMove;
+      else if(this.speed<1&&this.gps.lastStop)st+=n-this.gps.lastStop;}
+    $('gMove').textContent=this.fmt(mv); $('gStop').textContent=this.fmt(st);
+    $('gRec').textContent=this.rec(avg);
+    $('gLoc').innerHTML=this.lastPos?
+      `${this.lastPos.la.toFixed(5)}, ${this.lastPos.lo.toFixed(5)}<br><span style="font-size:11px;color:var(--txt3)">${new Date().toLocaleTimeString('pl-PL')}</span>`
+      :'Brak danych GPS';
+  }
+  road(){if(this.gps.hist.length<5)return'–';
+    const a=this.gps.hist.reduce((x,y)=>x+y,0)/this.gps.hist.length,m=Math.max(...this.gps.hist);
+    return m>100&&a>80?'Autostrada':m>80&&a>50?'Krajowa':m>50&&a>30?'Wojewódzka':a>0?'Miasto':'Postój';}
+  style(){if(this.gps.hist.length<10)return'–';let v=0;
+    for(let i=1;i<this.gps.hist.length;i++)if(Math.abs(this.gps.hist[i]-this.gps.hist[i-1])>10)v++;
+    const r=v/this.gps.hist.length;
+    return r>.3?'Agresywny':r>.15?'Dynamiczny':r>.05?'Normalny':'Spokojny';}
+  rec(a){if(!this.active)return'Rozpocznij sesję, aby zobaczyć analizę';
+    const rd=this.road();
+    if(rd==='Autostrada'&&a>100)return'Jazda autostradowa — rozważ interwał 2–3 min';
+    if(rd==='Miasto'&&this.style()==='Agresywny')return'Miasto + dynamiczna jazda — krótsze interwały (30s–1min)';
+    if(a<30&&this.gps.hist.length>20)return'Ruch miejski — krótsze interwały zalecane';
+    return'Optymalne ustawienia dla Twojego stylu jazdy';}
+  fmt(ms){const s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60);
+    return h>0?`${h}h ${m}m`:`${m}:${String(s%60).padStart(2,'0')}`;}
+
+  /* ====== STATYSTYKI ====== */
+  renderStats(){
+    if(this.sess.start){
+      const d=Date.now()-this.sess.start,m=Math.floor(d/60000),s=Math.floor(d%60000/1000);
+      $('sDur').textContent=`${m}:${String(s).padStart(2,'0')}`;
+    }
+    $('sAlerts').textContent=this.sess.alerts;
+    $('sReact').textContent=this.sess.react;
+    const tot=this.sess.react+this.sess.missed;
+    $('sSucc').textContent=(tot?Math.round(this.sess.react/tot*100):100)+'%';
+    if(this.sess.times.length){
+      const avg=this.sess.times.reduce((a,b)=>a+b,0)/this.sess.times.length;
+      $('sAvg').textContent=(avg/1000).toFixed(1)+'s';
+      $('sQual').innerHTML=avg<2000?'<span class="tag t-exc">Doskonały</span>':
+        avg<4000?'<span class="tag t-good">Dobry</span>':
+        avg<7000?'<span class="tag t-ok">W porządku</span>':'<span class="tag t-slow">Wolny</span>';
+    }else{$('sAvg').textContent='–';$('sQual').innerHTML='';}
+    this.drawChart();
+    const t=this.totals;
+    $('tSess').textContent=t.sess;
+    const tm=Math.floor(t.time/60000),th=Math.floor(tm/60);
+    $('tTime').textContent=th>0?`${th}h ${tm%60}m`:`${tm}m`;
+    $('tReact').textContent=t.react; $('tStreak').textContent=t.streak;
+    $('tBest').textContent=t.best?((t.best/1000).toFixed(2)+'s'):'–';
+  }
+  drawChart(){
+    const c=$('chart');if(!c)return;
+    const dpr=window.devicePixelRatio||1,w=c.clientWidth,h=140;
+    c.width=w*dpr;c.height=h*dpr;const x=c.getContext('2d');x.scale(dpr,dpr);
+    x.clearRect(0,0,w,h);
+    const d=this.sess.times.slice(-20);
+    if(!d.length){x.fillStyle='#777';x.font='13px sans-serif';x.textAlign='center';
+      x.fillText('Brak danych reakcji w tej sesji',w/2,h/2);return;}
+    const max=Math.max(...d,8000),bw=w/d.length;
+    d.forEach((v,i)=>{
+      const bh=Math.max(3,v/max*(h-24));
+      x.fillStyle=v<2000?'#4CAF50':v<4000?'#8BC34A':v<7000?'#ff9800':'#f44336';
+      x.fillRect(i*bw+2,h-bh-18,bw-4,bh);
+    });
+    x.fillStyle='#777';x.font='10px sans-serif';x.textAlign='center';
+    x.fillText('Czasy reakcji (ostatnie '+d.length+')',w/2,h-4);
+  }
+
+  /* ====== ZAPIS (localStorage) ====== */
+  loadTotals(){
+    try{const s=localStorage.getItem('czuwak3');if(s)this.totals=JSON.parse(s);else throw 0;}
+    catch(e){this.totals={sess:0,time:0,react:0,streak:0,best:0,ach:[]};}
+  }
+  saveTotals(){try{localStorage.setItem('czuwak3',JSON.stringify(this.totals));}catch(e){}}
+  saveSession(){
+    if(!this.sess.start)return;
+    const t=this.totals;
+    t.sess++; t.time+=Date.now()-this.sess.start; t.react+=this.sess.react;
+    if(this.sess.streak>t.streak)t.streak=this.sess.streak;
+    const fast=this.sess.times.length?Math.min(...this.sess.times):0;
+    if(fast&&(!t.best||fast<t.best))t.best=fast;
+    // odznaki zależne od sesji
+    const dur=Date.now()-this.sess.start;
+    if(dur>3600000)this.unlock('marathon');
+    const hr=new Date().getHours();
+    if(hr>=22||hr<5)this.unlock('night');
+    if(this.sess.alerts>=10&&this.sess.missed===0)this.unlock('perfect');
+    this.saveTotals(); this.renderAch();
+  }
+  clearStats(){
+    if(!confirm('Wyczyścić wszystkie statystyki i odznaki?'))return;
+    this.totals={sess:0,time:0,react:0,streak:0,best:0,ach:[]};
+    this.sess=this.blankSess(); this.saveTotals();
+    this.renderStats(); this.renderAch();
+  }
+  clearGps(){
+    if(!confirm('Wyczyścić dane GPS bieżącej sesji?'))return;
+    this.gps=this.blankGps(); this.renderGps();
+  }
+
+  /* ====== ODZNAKI ====== */
+  get achList(){return[
+    {id:'first',ic:'🚗',n:'Pierwszy raz',d:'Pierwsza sesja'},
+    {id:'react10',ic:'⚡',n:'Czujny',d:'10 reakcji'},
+    {id:'react50',ic:'🎯',n:'Skupiony',d:'50 reakcji łącznie'},
+    {id:'fast',ic:'🏎️',n:'Błyskawica',d:'Reakcja < 1s'},
+    {id:'streak5',ic:'🔥',n:'Seria 5',d:'5 reakcji z rzędu'},
+    {id:'streak20',ic:'👑',n:'Seria 20',d:'20 reakcji z rzędu'},
+    {id:'marathon',ic:'⏱️',n:'Maraton',d:'Sesja > 1h'},
+    {id:'night',ic:'🌙',n:'Nocny jeździec',d:'Jazda 22:00–5:00'},
+    {id:'perfect',ic:'💎',n:'Bez pudła',d:'100% przy 10+ alertach'},
+    {id:'trainer',ic:'🎮',n:'Trener',d:'Test refleksu < 300ms'},
+  ];}
+  unlock(id){
+    if(!this.totals.ach.includes(id)){
+      this.totals.ach.push(id); this.saveTotals(); this.renderAch();
+      this.speak('Nowa odznaka odblokowana');
+    }
+  }
+  checkAch(k){if(k==='first')this.unlock('first');}
+  checkReactAch(rt){
+    if(this.totals.react+this.sess.react>=10)this.unlock('react10');
+    if(this.totals.react+this.sess.react>=50)this.unlock('react50');
+    if(rt>0&&rt<1000)this.unlock('fast');
+    if(this.sess.streak>=5)this.unlock('streak5');
+    if(this.sess.streak>=20)this.unlock('streak20');
+  }
+  renderAch(){
+    $('achGrid').innerHTML=this.achList.map(a=>{
+      const un=this.totals.ach.includes(a.id);
+      return `<div class="ach-i ${un?'un':''}"><div class="ic">${a.ic}</div>
+        <div class="n">${a.n}</div><div class="d">${a.d}</div></div>`;
+    }).join('');
+  }
+
+  /* ====== TRENING REFLEKSU ====== */
+  trainTap(){
+    const b=$('trBox');
+    if(this.train.state==='idle'||this.train.state==='result'){
+      b.className='train-box wait'; b.textContent='Czekaj na zielony...';
+      this.train.state='wait';
+      this.train.timer=setTimeout(()=>{
+        b.className='train-box go'; b.textContent='TERAZ! Dotknij!';
+        this.train.state='go'; this.train.t0=Date.now();
+      },1500+Math.random()*4000);
+    }else if(this.train.state==='wait'){
+      clearTimeout(this.train.timer);
+      b.className='train-box result'; b.textContent='Za wcześnie! Spróbuj ponownie';
+      this.train.state='result';
+    }else if(this.train.state==='go'){
+      const rt=Date.now()-this.train.t0;
+      b.className='train-box result'; b.textContent=rt+' ms — dotknij, by powtórzyć';
+      this.train.state='result';
+      $('trLast').textContent=rt+' ms';
+      const best=+(localStorage.getItem('czuwak3_train')||0);
+      if(!best||rt<best){localStorage.setItem('czuwak3_train',rt);$('trBest').textContent=rt+' ms';}
+      if(rt<300)this.unlock('trainer');
+    }
+  }
+
+  clearTimers(){['alert','count','next'].forEach(k=>{
+    if(this.timers[k]){clearTimeout(this.timers[k]);clearInterval(this.timers[k]);this.timers[k]=null;}});}
+  async wakeLock(){try{if('wakeLock'in navigator)this.wl=await navigator.wakeLock.request('screen');}catch(e){}}
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const app=new Czuwak();
+  const b=+(localStorage.getItem('czuwak3_train')||0);
+  if(b)$('trBest').textContent=b+' ms';
+});
+</script>
 </body>
 </html>
